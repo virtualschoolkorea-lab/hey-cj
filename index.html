@@ -103,7 +103,7 @@
             font-weight: 700;
         }
 
-        /* 🌟 지역 체크박스 둥근 버튼 영역 */
+        /* 지역 체크박스 버튼 영역 */
         .checkbox-group {
             display: flex;
             flex-wrap: wrap;
@@ -168,8 +168,10 @@
         .badge-free { background-color: #4CAF50; }
         .badge-paid { background-color: #f39c12; }
         .badge-info { background-color: #7f8c8d; }
-        .badge-open { background-color: #ff9800; } 
-        .badge-close { background-color: #e74c3c; } 
+        .badge-today { background-color: #E53935; } /* 오늘마감 강렬한 빨간색 */
+        .badge-open { background-color: #ff9800; }  /* 내일오픈 주황색 */
+        .badge-close { background-color: #F06292; } /* 내일마감 핑크빛 */
+        .badge-affiliate { background-color: #673AB7; } /* 제휴 보라색 */
         
         .title { font-size: 1.05rem; font-weight: 700; margin: 0 0 10px 0; line-height: 1.4; word-break: keep-all; }
         
@@ -218,7 +220,7 @@
         <div class="sub-header" id="last-updated-text">최근 업데이트: 계산중...</div>
         <div class="header-actions">
             <div class="stats-badge">
-                오늘 방문 <span id="count-today" style="font-weight:700; color:#fff;">0</span> / 누적 <span id="count-total">0</span>
+                오늘 방문 <span id="count-today" style="font-weight:700; color:#fff;">...</span> / 누적 <span id="count-total">...</span>
             </div>
             <button class="btn-share" onclick="sharePage()">
                 <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
@@ -228,9 +230,9 @@
     </header>
 
     <div class="tabs">
-        <div class="tab active" onclick="changeTab(this, 'all')">전체보기</div>
+        <div class="tab active" onclick="changeTab(this, 'ongoing')">현재 접수중</div>
         <div class="tab" onclick="changeTab(this, 'tomorrow')">내일 오픈/마감</div>
-        <div class="tab" onclick="changeTab(this, 'ongoing')">현재 접수중</div>
+        <div class="tab" onclick="changeTab(this, 'affiliate')">제휴 이벤트</div>
     </div>
 
     <div class="checkbox-group">
@@ -258,10 +260,9 @@
 </div>
 
 <script>
-    // --- 최근 업데이트 시간 자동화 로직 ---
+    // --- 최근 업데이트 시간 로직 ---
     function initLastUpdated() {
         const updateElem = document.getElementById('last-updated-text');
-        // document.lastModified 를 통해 파일이 수정 및 배포된 시간을 가져옵니다.
         const lm = new Date(document.lastModified);
         const y = lm.getFullYear();
         const m = lm.getMonth() + 1;
@@ -271,26 +272,28 @@
         updateElem.innerText = `최근 업데이트: ${y}/${m}/${d} ${h}:${min}`;
     }
 
-    // --- 방문자 카운터 ---
-    function initVisitCounters() {
-        let total = localStorage.getItem('hey_total_visits') || 0;
-        total = parseInt(total) + 1;
-        localStorage.setItem('hey_total_visits', total);
+    // --- 글로벌 방문자 카운터 동기화 (무료 API 활용) ---
+    async function initVisitCounters() {
+        // 고유한 이름(Namespace)을 지정하여 우리 앱만의 카운트를 셉니다.
+        const namespace = 'heycheongju_app_v1'; 
+        // 날짜를 20260306 형식으로 만들어 오늘 전용 카운터를 씁니다.
+        const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, ''); 
 
-        const todayStr = new Date().toLocaleDateString();
-        let storedDate = localStorage.getItem('hey_visit_date');
-        let today = localStorage.getItem('hey_today_visits') || 0;
+        try {
+            // 1. 총 방문자 누적
+            const resTotal = await fetch(`https://api.counterapi.dev/v1/${namespace}/total/up`);
+            const dataTotal = await resTotal.json();
+            document.getElementById('count-total').innerText = dataTotal.count;
 
-        if (storedDate !== todayStr) {
-            today = 1;
-            localStorage.setItem('hey_visit_date', todayStr);
-        } else {
-            today = parseInt(today) + 1;
+            // 2. 오늘 방문자 누적
+            const resToday = await fetch(`https://api.counterapi.dev/v1/${namespace}/today_${todayStr}/up`);
+            const dataToday = await resToday.json();
+            document.getElementById('count-today').innerText = dataToday.count;
+        } catch (error) {
+            console.error('카운터 API 오류 발생:', error);
+            document.getElementById('count-total').innerText = '-';
+            document.getElementById('count-today').innerText = '-';
         }
-        localStorage.setItem('hey_today_visits', today);
-
-        document.getElementById('count-total').innerText = total;
-        document.getElementById('count-today').innerText = today;
     }
 
     // --- 웹 공유 API ---
@@ -309,7 +312,7 @@
         }
     }
 
-    // --- 교체된 행사 데이터 (type, isTomorrow 등은 아래서 자동 덮어쓰기 됨) ---
+    // --- 행사 데이터 ---
     const eventData = [
         { title: "영어그림책 읽기", age: "6~7세", loc: "청주", place: "내수도서관", applyText: "~3/6(금) 10:30까지 마감", date: "3~5월 매주 수요일 16:00-18:00", costType: "유료 (5,000원)", link: "https://blog.naver.com/hey_cheongju/224202960352" },
         { title: "그림책과 보드게임", age: "초2~초5", loc: "진천", place: "진천교육도서관", applyText: "~3/6(금) 17:00 마감 (선착순)", date: "4/3(금)~5/22(금) 매주 금요일 15:30-17:30", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224181433605" },
@@ -354,43 +357,58 @@
         { title: "2026 가족책꽂이 분양", age: "6세~초등", loc: "청주", place: "청주기적의도서관", applyText: "연중상시", date: "3-11월 중 한 달간", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224164016360" },
         { title: "우리아이 마음지도 찾기(심리검사)", age: "학부모 (아동 1명+양육자 1명)", loc: "청주", place: "청주시아동복지관", applyText: "연중상시", date: "온라인검사 및 전화상담", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224148922038" },
         { title: "맞춤형 양육멘토링 '내짝꿍'", age: "학부모", loc: "청주", place: "청주시아동복지관", applyText: "연중상시 (최대 20명)", date: "평일 09-18시 (가정방문/전화상담)", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224148909268" },
-        { title: "2026 충북아빠단 모집", age: "학부모 (충북 거주 아빠)", loc: "충북", place: "인구보건복지협회 충북세종지회", applyText: "연중상시", date: "해당정보 없음", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224157608512" }
+        { title: "2026 충북아빠단 모집", age: "학부모 (충북 거주 아빠)", loc: "충북", place: "인구보건복지협회 충북세종지회", applyText: "연중상시", date: "해당정보 없음", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224157608512" },
+        
+        // 🌟 제휴 이벤트 (샘플 데이터 3개)
+        { type: "affiliate", title: "[제휴] 헤이키즈 키즈카페 단독 할인", age: "영유아", loc: "청주", place: "청주 시내 제휴 키즈카페", applyText: "상시", date: "2026년 연중 상시 할인", costType: "유료 (특가 할인)", link: "javascript:alert('준비중입니다! 곧 찾아올게요.');" },
+        { type: "affiliate", title: "[제휴] 우리가족 인생사진 패키지", age: "가족", loc: "청주", place: "스튜디오 헤이", applyText: "매월 선착순 50명", date: "예약 시 개별 일정 조율", costType: "유료 (50% 할인)", link: "javascript:alert('준비중입니다! 곧 찾아올게요.');" },
+        { type: "affiliate", title: "[제휴] 어린이 맞춤 화상영어 첫 달 무료", age: "초등학생", loc: "온라인", place: "비대면 화상 수업", applyText: "상시 접수중", date: "개별 일정 맞춤 진행", costType: "무료 (첫 달 무료)", link: "javascript:alert('준비중입니다! 곧 찾아올게요.');" }
     ];
 
-    // --- 🌟 내일 날짜 계산 및 자동 라벨링(오픈/마감) 로직 ---
+    // --- 🌟 오늘/내일 날짜 계산 및 자동 라벨링(오픈/마감) 로직 ---
     function categorizeEvents() {
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
         
-        const tMonth = tomorrow.getMonth() + 1;
-        const tDate = tomorrow.getDate();
-        const tomorrowStr = `${tMonth}/${tDate}`; // 예: "3/6"
+        const todayStr = `${today.getMonth() + 1}/${today.getDate()}`;     // 예: "3/6"
+        const tomorrowStr = `${tomorrow.getMonth() + 1}/${tomorrow.getDate()}`; // 예: "3/7"
+
+        // 날짜 텍스트를 분석하여 오픈/마감 여부를 똑똑하게 반환하는 함수
+        function checkDateStatus(text, dStr) {
+            if (!text.includes(dStr)) return { open: false, close: false };
+            const idx = text.indexOf(dStr);
+            const before = text.substring(0, idx);
+            const after = text.substring(idx + dStr.length);
+            
+            let isClose = before.includes('~') || after.includes('마감') || after.includes('까지');
+            let isOpen = after.includes('~') || after.includes('오픈') || after.includes('시작') || (idx === 0 && !isClose);
+            return { open: isOpen, close: isClose };
+        }
 
         eventData.forEach(item => {
-            // 초기화
+            // 제휴 이벤트는 분석 제외
+            if (item.type === 'affiliate') return;
+
+            item.isTodayClose = false;
             item.isTomorrowOpen = false;
             item.isTomorrowClose = false;
-            item.type = "ongoing"; // 기본은 '현재 접수중'
+            item.type = "ongoing"; // 기본은 모두 '현재 접수중'
 
-            if (item.applyText && item.applyText.includes(tomorrowStr)) {
-                const text = item.applyText;
-                const idx = text.indexOf(tomorrowStr);
-                const before = text.substring(0, idx);
-                const after = text.substring(idx + tomorrowStr.length);
-                
-                // 마감 조건: 앞에 '~'가 있거나, 뒤에 '마감', '까지'가 올 때
-                if (before.includes('~') || after.includes('마감') || after.includes('까지')) {
-                    item.isTomorrowClose = true;
-                }
-                
-                // 오픈 조건: 뒤에 '~'나 '오픈', '시작'이 오거나, 문장 맨 앞이면서 마감관련 단어가 없을 때
-                if (after.includes('~') || after.includes('오픈') || after.includes('시작') || 
-                   (idx === 0 && !after.includes('마감') && !after.includes('까지'))) {
-                    item.isTomorrowOpen = true;
+            if (item.applyText) {
+                // 1. 오늘 마감 체크
+                const todayStatus = checkDateStatus(item.applyText, todayStr);
+                if (todayStatus.close) {
+                    item.isTodayClose = true; 
+                    // 오늘 마감인 항목은 '현재 접수중' 탭에 그대로 남습니다.
                 }
 
-                // 둘 중 하나라도 참이면 '내일 오픈/마감' 탭으로 분류!
+                // 2. 내일 오픈/마감 체크
+                const tomStatus = checkDateStatus(item.applyText, tomorrowStr);
+                if (tomStatus.open) item.isTomorrowOpen = true;
+                if (tomStatus.close) item.isTomorrowClose = true;
+
+                // 내일 오픈이거나 마감이면 '내일 오픈/마감' 탭으로 보냄
                 if (item.isTomorrowOpen || item.isTomorrowClose) {
                     item.type = "tomorrow";
                 }
@@ -399,7 +417,7 @@
     }
 
     // --- 데이터 렌더링 및 탭/필터 상태 관리 ---
-    let currentTab = 'all';
+    let currentTab = 'ongoing'; // 기본화면: 현재 접수중
 
     function changeTab(element, type) {
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -409,7 +427,7 @@
     }
 
     function applyFilters() {
-        // 1. 현재 체크된 지역 값들 가져오기
+        // 체크된 지역 값들 가져오기
         const checkedBoxes = document.querySelectorAll('.filter-cb:checked');
         const selectedLocs = Array.from(checkedBoxes).map(cb => cb.value);
 
@@ -418,14 +436,13 @@
 
         const filteredData = eventData.filter(item => {
             // 탭 검사
-            const matchTab = currentTab === 'all' || item.type === currentTab;
+            const matchTab = item.type === currentTab;
             
             // 지역 검사
             let matchLoc = false;
             if (selectedLocs.length === 0) {
-                matchLoc = true; // 아무것도 체크 안 하면 모두 보여줌
+                matchLoc = true; // 선택 없으면 전체
             } else {
-                // 선택된 지역 확장 (충북, 온라인 포함어 처리)
                 let expandedLocs = [];
                 selectedLocs.forEach(loc => {
                     expandedLocs.push(loc);
@@ -449,29 +466,37 @@
             if (safeCost === '해당정보 없음') safeCost = '비용정보 없음';
             
             let costBadgeClass = 'badge-info';
-            if (safeCost.includes('무료')) costBadgeClass = 'badge-free';
+            if (item.type === 'affiliate') costBadgeClass = 'badge-affiliate';
+            else if (safeCost.includes('무료')) costBadgeClass = 'badge-free';
             else if (safeCost.includes('유료')) costBadgeClass = 'badge-paid';
 
-            // 내일오픈 / 내일마감 뱃지 처리 (자동 계산된 값 적용)
-            let tomorrowBadge = '';
-            if (item.isTomorrowOpen) tomorrowBadge += `<span class="badge badge-open">내일오픈</span> `;
-            if (item.isTomorrowClose) tomorrowBadge += `<span class="badge badge-close">내일마감</span> `;
+            // 날짜 기반 뱃지 생성
+            let dateBadges = '';
+            if (item.isTodayClose) dateBadges += `<span class="badge badge-today">오늘마감</span> `;
+            if (item.isTomorrowOpen) dateBadges += `<span class="badge badge-open">내일오픈</span> `;
+            if (item.isTomorrowClose) dateBadges += `<span class="badge badge-close">내일마감</span> `;
+
+            // 접수기간 글자색 강조 로직
+            let applyTextStyle = 'color:var(--text-sub);'; // 기본색
+            if (item.isTodayClose) applyTextStyle = 'color:#E53935; font-weight:700;'; // 오늘마감 빨간색 강조
 
             const cardHTML = `
                 <div class="card">
                     <div class="card-header">
                         <div class="badges">
-                            ${tomorrowBadge}
+                            ${dateBadges}
                             <span class="badge badge-loc">${item.loc || ''}</span>
                             <span class="badge badge-age">${item.age || ''}</span>
-                            <span class="badge ${costBadgeClass}">${safeCost}</span>
+                            <span class="badge ${costBadgeClass}">${item.type === 'affiliate' ? '제휴혜택' : safeCost}</span>
                         </div>
                     </div>
                     <h2 class="title">${item.title || ''}</h2>
                     <div class="info-row"><div class="info-label">장소</div><div class="info-desc">${item.place || ''}</div></div>
-                    <div class="info-row"><div class="info-label">접수기간</div><div class="info-desc" style="color:#d32f2f; font-weight:500;">${item.applyText}</div></div>
+                    <div class="info-row"><div class="info-label">접수기간</div><div class="info-desc" style="${applyTextStyle}">${item.applyText}</div></div>
                     <div class="info-row"><div class="info-label">운영일정</div><div class="info-desc">${item.date || '해당정보 없음'}</div></div>
-                    <a href="${item.link || '#'}" target="_blank" class="btn-link">상세보기 및 예약 ↗</a>
+                    <a href="${item.link || '#'}" ${item.type !== 'affiliate' ? 'target="_blank"' : ''} class="btn-link">
+                        ${item.type === 'affiliate' ? '제휴 혜택 받기 🎁' : '상세보기 및 예약 ↗'}
+                    </a>
                 </div>
             `;
             container.innerHTML += cardHTML;
@@ -482,7 +507,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         initLastUpdated();
         initVisitCounters();
-        categorizeEvents(); // 매일매일 자동으로 내일 날짜를 파악해서 뱃지를 달아줍니다!
+        categorizeEvents(); // 매일 시스템 날짜를 기반으로 뱃지와 탭을 자동 분배
         applyFilters(); 
     });
 </script>
