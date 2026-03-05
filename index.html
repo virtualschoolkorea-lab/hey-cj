@@ -59,6 +59,7 @@
             font-weight: 500;
             color: var(--text-sub);
             border-bottom: 3px solid transparent;
+            transition: all 0.2s;
         }
         .tab.active {
             color: var(--primary-color);
@@ -76,7 +77,9 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border: 1px solid var(--border-color);
             display: block;
+            transition: transform 0.2s;
         }
+        .card:hover { transform: translateY(-2px); }
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -95,16 +98,19 @@
         .badge-age { background-color: #9b59b6; }
         .badge-free { background-color: #e74c3c; }
         .badge-paid { background-color: #f39c12; }
+        .badge-info { background-color: #7f8c8d; } /* 비용정보 없음 추가 */
         .badge-tomorrow { background-color: #e91e63; }
         
-        .title { font-size: 1.05rem; font-weight: 700; margin: 0 0 8px 0; }
+        .title { font-size: 1.05rem; font-weight: 700; margin: 0 0 8px 0; line-height: 1.4; word-break: keep-all; }
         .info-row {
             font-size: 0.85rem;
             color: var(--text-sub);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             display: flex;
+            align-items: flex-start;
         }
-        .info-label { font-weight: 500; width: 60px; flex-shrink: 0; color: #555;}
+        .info-label { font-weight: 500; width: 60px; flex-shrink: 0; color: #555; margin-top: 1px; }
+        .info-desc { word-break: keep-all; line-height: 1.3; }
         
         .btn-link {
             display: block;
@@ -112,11 +118,12 @@
             background-color: var(--primary-color);
             color: white;
             text-decoration: none;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
             font-size: 0.9rem;
             font-weight: 500;
-            margin-top: 12px;
+            margin-top: 15px;
+            transition: background-color 0.2s;
         }
         .btn-link:hover { background-color: #388E3C; }
     </style>
@@ -126,7 +133,7 @@
 <div class="app-container">
     <header>
         <h1>헤이청주 📢 오픈/마감 일정</h1>
-        <div class="sub-header">업데이트: 3/4(수) 21:23</div>
+        <div class="sub-header">최근 업데이트: 3/5(목) 16:30</div>
     </header>
 
     <div class="tabs">
@@ -140,125 +147,41 @@
 </div>
 
 <script>
-    // 제공해주신 데이터를 바탕으로 한 배열 구성
+    // 전체 44개 데이터 포함
     const eventData = [
-        {
-            type: "tomorrow",
-            loc: "청주", age: "연령제한없음",
-            title: "아동전집대출(3-4월)",
-            place: "청주 관내 도서관",
-            date: "3/13(금)~3/15(일) (대출 45일)",
-            costType: "무료",
-            link: "https://blog.naver.com/hey_cheongju/224200584218"
-        },
-        {
-            type: "tomorrow",
-            loc: "비대면", age: "6-7세(20~21년생)",
-            title: "책놀이 옛이야기 (ZOOM)",
-            place: "청주열린도서관",
-            date: "3/16~4/6 매주 월 (4회차)",
-            costType: "무료",
-            link: "https://blog.naver.com/hey_cheongju/224204023070"
-        },
-        {
-            type: "tomorrow",
-            loc: "청주/주말", age: "어린이포함 가족",
-            title: "캘리무드등 만들기 (가족당 2개)",
-            place: "내수도서관",
-            date: "3/14(토) 10:30-12:00",
-            costType: "유료(5천원)",
-            link: "https://blog.naver.com/hey_cheongju/224204440261"
-        },
-        {
-            type: "tomorrow",
-            loc: "세종/주말", age: "12개월 이상",
-            title: "베베핀 뮤지컬",
-            place: "세종문화예술회관",
-            date: "4/25(토) 11:00 / 14:00 / 16:30",
-            costType: "유료",
-            link: "https://blog.naver.com/hey_cheongju/224204284270"
-        },
-        // --- 진행 중 데이터 ---
-        {
-            type: "ongoing",
-            loc: "청주", age: "4~13세",
-            title: "찾아가는 직업체험 키자니아",
-            place: "현대백화점 충청점",
-            date: "3/6(금)~3/29(일) 11:00~18:40",
-            costType: "유료(5천원)",
-            link: "https://blog.naver.com/hey_cheongju/224197760786"
-        },
-        {
-            type: "ongoing",
-            loc: "청주", age: "전연령",
-            title: "새활용공예체험 '더새로움'",
-            place: "청주새활용시민센터",
-            date: "오픈 선착순",
-            costType: "무/유료",
-            link: "https://m.blog.naver.com/hey_cheongju/224197945325"
-        },
-        {
-            type: "ongoing",
-            loc: "청주", age: "2019~2022년생",
-            title: "체험형 VR 동화구연",
-            place: "오송도서관",
-            date: "3/14(토) or 28(토)",
-            costType: "무료",
-            link: "https://blog.naver.com/hey_cheongju/224200624205"
-        },
-        {
-            type: "ongoing",
-            loc: "온라인", age: "초등 4-6학년",
-            title: "제19기 어린이법제관 모집",
-            place: "어린이법제처",
-            date: "3/3 ~ 3/31(화) 18시 선착순",
-            costType: "안내없음",
-            link: "https://blog.naver.com/hey_cheongju/224202455449"
-        }
-        // (원하시는 경우 배열에 나머지 데이터도 동일한 형식으로 추가하시면 됩니다!)
-    ];
-
-    function renderCards(filterType) {
-        const container = document.getElementById('list-container');
-        container.innerHTML = '';
-
-        const filteredData = eventData.filter(item => filterType === 'all' || item.type === filterType);
-
-        filteredData.forEach(item => {
-            const costBadgeClass = item.costType.includes('무료') ? 'badge-free' : 'badge-paid';
-            const tomorrowBadge = item.type === 'tomorrow' ? `<span class="badge badge-tomorrow">내일오픈</span>` : '';
-            
-            const cardHTML = `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="badges">
-                            ${tomorrowBadge}
-                            <span class="badge badge-loc">${item.loc}</span>
-                            <span class="badge badge-age">${item.age}</span>
-                            <span class="badge ${costBadgeClass}">${item.costType}</span>
-                        </div>
-                    </div>
-                    <h2 class="title">${item.title}</h2>
-                    <div class="info-row"><div class="info-label">장소/방법</div><div>${item.place}</div></div>
-                    <div class="info-row"><div class="info-label">일정/기간</div><div>${item.date}</div></div>
-                    <a href="${item.link}" target="_blank" class="btn-link">상세보기 및 예약 (블로그)</a>
-                </div>
-            `;
-            container.innerHTML += cardHTML;
-        });
-    }
-
-    function filterData(type) {
-        // 탭 활성화 UI 변경
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        event.target.classList.add('active');
-        // 데이터 렌더링
-        renderCards(type);
-    }
-
-    // 초기 로딩 시 전체보기 렌더링
-    renderCards('all');
-</script>
-
-</body>
-</html>
+        // ---------- 내일 오픈/마감 (tomorrow) ----------
+        { type: "tomorrow", loc: "청주", age: "초등학생", title: "말 키링 만들기", place: "상당도서관", date: "3/14(토) 13/14/15시 총 3회", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224202590610", applyOpen: "2026-03-04 10:00", applyClose: "", applyNote: "선착순" },
+        { type: "tomorrow", loc: "청주", age: "초1~고3", title: "토요 예술체험 프로그램", place: "충북교육문화원", date: "상반기(3-6월)/하반기(8-11월) 토요일", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224187380791", applyOpen: "2026-03-04 09:00", applyClose: "2026-03-10 18:00", applyNote: "추첨제" },
+        { type: "tomorrow", loc: "청주", age: "20년 11월~23년 4월생", title: "과일타르트 만들기", place: "진로팡 2층(용암동)", date: "3/20(금) 16-17시", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224193214158", applyOpen: "2026-03-04 12:00", applyClose: "", applyNote: "선착순" },
+        { type: "tomorrow", loc: "증평", age: "유아~성인", title: "마블링 도자기 만들기", place: "증평민속체험박물관", date: "4/4(토) 13-15시", costType: "유료(1만원)", link: "https://blog.naver.com/hey_cheongju/224198560179", applyOpen: "2026-03-04 12:00", applyClose: "", applyNote: "선착순" },
+        { type: "tomorrow", loc: "증평", age: "유아~성인", title: "전통간식 오란다와 깨강정 만들기", place: "증평민속체험박물관", date: "4/25(토) 13-15시", costType: "유료(1만원)", link: "https://blog.naver.com/hey_cheongju/224199480763", applyOpen: "2026-03-04 12:00", applyClose: "", applyNote: "선착순" },
+        { type: "tomorrow", loc: "청주", age: "초등2~중등2(청주거주)", title: "꿈의 무용단 청주 신규단원 모집", place: "동부창고 35동", date: "3~10월 매주 화/목 16-18시", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224181840776", applyOpen: "", applyClose: "2026-03-04", applyNote: "선발제" },
+        
+        // ---------- 현재 진행 중 (ongoing) ----------
+        { type: "ongoing", loc: "청주", age: "임산부, 0~4세 부모", title: "안전·건강 올인원 영유아 육아 클래스", place: "청주시가족센터", date: "3/24(화)~4/7(화) 매주 화요일", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224203085197", applyOpen: "2026-03-03 09:00", applyClose: "2026-03-23 18:00", applyNote: "로그인 필요" },
+        { type: "ongoing", loc: "청주", age: "6~7세", title: "영어그림책 읽기", place: "내수도서관", date: "3~5월 매주 수요일", costType: "유료(5천원)", link: "https://blog.naver.com/hey_cheongju/224202960352", applyOpen: "", applyClose: "2026-03-06", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "초등 1-2학년", title: "그림책 속 이야기, 보드게임으로 만나다", place: "오창도서관", date: "3~5월 매주 화요일", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224202953918", applyOpen: "", applyClose: "2026-03-06 18:00", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "초등학생 이상", title: "우주 마을과 함께하는 태양관측회", place: "기적의 도서관", date: "3/21(토) 10-12시", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224201590101", applyOpen: "2026-03-03 10:00", applyClose: "2026-03-03", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "전연령", title: "정월대보름 개기월식 공개관측회", place: "문암생태공원", date: "3/3(화) 19:00-21:30", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224201582826", applyOpen: "", applyClose: "", applyNote: "행사 당일 16시 공지 확인" },
+        { type: "ongoing", loc: "청주", age: "25년 3월~7월생", title: "[도리도리] 상반기 책놀이 추가모집", place: "오송도서관", date: "3/12(목)~4/20(목) 주1회", costType: "무료(재료비별도)", link: "https://blog.naver.com/hey_cheongju/224201615730", applyOpen: "2026-03-03 10:00", applyClose: "2026-03-03", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "2022년~2023년생", title: "[쭈욱쭈욱] 상반기 책놀이 추가모집", place: "청주시립도서관", date: "3/11(수)~4/29(수) 주1회", costType: "무료(재료비별도)", link: "https://blog.naver.com/hey_cheongju/224201624054", applyOpen: "2026-03-03 10:00", applyClose: "2026-03-03", applyNote: "선착순" },
+        { type: "ongoing", loc: "천안", age: "6세 이상", title: "주말가족교실(별자리+키링)", place: "천안홍대용과학관", date: "3~6월 매주 토/일", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224198541781", applyOpen: "2026-03-03 12:00", applyClose: "", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "20년~23년생", title: "토요가족체험", place: "충북유아교육진흥원", date: "3/14(토) 09:30-12:00", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224194509093", applyOpen: "2026-03-02 10:00", applyClose: "2026-03-06 17:00", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "19-22년생", title: "체험형VR 동화구연(콩나무)", place: "오송도서관", date: "3/14(토) or 28(토)", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224200624205", applyOpen: "2026-03-02 10:00", applyClose: "2026-03-02", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "유아~초등저", title: "어린이 노오븐 쿠킹 원데이클래스", place: "청남대 나라사랑교육문화원", date: "3/7(토) or 14(토)", costType: "유료(입장료포함)", link: "https://blog.naver.com/hey_cheongju/224200176365", applyOpen: "2026-02-28 09:00", applyClose: "2026-02-28", applyNote: "선착순" },
+        { type: "ongoing", loc: "세종", age: "5~9세", title: "과학예술융합교육(자원순환)", place: "국립어린이박물관", date: "3/7(토)~3/28(토) 매주 토", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224189929587", applyOpen: "", applyClose: "", applyNote: "로그인 필요" },
+        { type: "ongoing", loc: "청주", age: "전연령", title: "새활용공예체험프로그램 '더새로움'", place: "청주새활용시민센터", date: "선착순 예약", costType: "무/유료", link: "https://m.blog.naver.com/hey_cheongju/224197945325", applyOpen: "", applyClose: "", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "4~13세", title: "직업체험 테마파크 키자니아", place: "현대백화점 충청점", date: "(운영기간 별도 안내)", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224197760786", applyOpen: "", applyClose: "", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "초/중/고등학생", title: "(열린탐험대) 드론탐험대/예술탐험대", place: "청주열린도서관", date: "4~11월", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224193196956", applyOpen: "", applyClose: "2026-02-26", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "6세~초등 6", title: "(1학기) 호기심 탐험대", place: "청주기적의도서관", date: "3~5월 주 1회(총 10차시)", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224185579874", applyOpen: "", applyClose: "", applyNote: "마감 상이" },
+        { type: "ongoing", loc: "진천", age: "초등 2-5학년", title: "그림책 보드게임", place: "진천교육도서관", date: "4/3(금)~5/22(금) 매주 금", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224181433605", applyOpen: "", applyClose: "2026-03-06", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "24개월 이상", title: "가족뮤지컬 아기돼지삼형제", place: "청주아트홀", date: "3/7(토) 11/14/16시", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224148692103", applyOpen: "", applyClose: "2026-03-07", applyNote: "" },
+        { type: "ongoing", loc: "음성", age: "초등학생", title: "상반기 도서관 교육프로그램", place: "음성교육도서관", date: "3~5월 중 10차시", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224195916253", applyOpen: "", applyClose: "2026-03-11", applyNote: "" },
+        { type: "ongoing", loc: "세종", age: "초등 3-5학년", title: "제3기 어린이상상단 모집", place: "국립어린이박물관", date: "(활동기간 안내)", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224197184648", applyOpen: "", applyClose: "2026-03-12", applyNote: "선발제" },
+        { type: "ongoing", loc: "증평", age: "초등 4-6학년", title: "초등 북클럽", place: "증평교육도서관", date: "4~11월 매주 금요일", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224195911369", applyOpen: "", applyClose: "2026-03-13 16:00", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "전연령", title: "나만의 감성소품 만들기(수납선반)", place: "미동산수목원", date: "3월 1~3주 토요일", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224191850300", applyOpen: "", applyClose: "2026-03-20", applyNote: "" },
+        { type: "ongoing", loc: "세종", age: "24개월 이상", title: "원더매직 오리지널 과학마술콘서트", place: "세종문화예술회관", date: "3/21(토)", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224190915920", applyOpen: "", applyClose: "", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "7세 이상", title: "어린이(영어)뮤지컬 비밀의 화원", place: "문화제조창 한국공예관", date: "3/14(토)-22(일) 토/일", costType: "무료(예약금환불)", link: "https://blog.naver.com/hey_cheongju/224194573731", applyOpen: "", applyClose: "", applyNote: "" },
+        { type: "ongoing", loc: "천안", age: "22년생 이상", title: "노래극-뜀뛰는 여관", place: "천안어린이꿈누리터", date: "3/14(토)~22(일) 토/일", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224191920604", applyOpen: "", applyClose: "2026-03-22", applyNote: "" },
+        { type: "ongoing", loc: "세종", age: "5~9세", title: "한글 놀이터 세종관", place: "세종문화예술회관", date: "상시(월요일 휴관)", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224194529393", applyOpen: "", applyClose: "", applyNote: "" },
+        { type: "ongoing", loc: "대전", age: "초등학생", title: "슈퍼 로봇팔과 함께 AI탐험", place: "국립중앙과학관", date: "3월 매주 목
