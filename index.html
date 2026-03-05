@@ -76,13 +76,23 @@
         .btn-share:hover { background: rgba(255, 255, 255, 0.35); }
         .btn-share svg { width: 14px; height: 14px; fill: currentColor; }
 
-        /* 변경된 탭 메뉴 */
+        /* 안내 문구 스타일 추가 */
+        .disclaimer-text {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.4;
+            word-break: keep-all;
+        }
+
+        /* 탭 메뉴 */
         .tabs {
             display: flex;
             background: white;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
-            top: 96px; 
+            top: 115px; /* 헤더 높이 증가로 인한 위치 조정 */
             z-index: 99;
         }
         .tab {
@@ -111,7 +121,7 @@
             background: #fafafa;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
-            top: 141px; 
+            top: 160px; /* 헤더 높이 증가로 인한 위치 조정 */
             z-index: 98;
         }
         .filter-cb { display: none; }
@@ -216,6 +226,9 @@
                 공유하기
             </button>
         </div>
+        <div class="disclaimer-text">
+            정보를 큐레이션하는 과정에서 일부 오류가 있을 수 있는 점 양해부탁드립니다.
+        </div>
     </header>
 
     <div class="tabs">
@@ -260,7 +273,6 @@
         updateElem.innerText = `최근 업데이트: ${y}/${m}/${d} ${h}:${min}`;
     }
 
-    // 🌟 모든 사용자가 동기화되는 실시간 방문자 카운터
     async function initVisitCounters() {
         const namespace = 'heycheongju_v1'; 
         const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, ''); 
@@ -292,7 +304,6 @@
         }
     }
 
-    // 🌟 핵심: applyStart(오픈일)와 applyEnd(마감일)를 분리하여 데이터 입력
     const eventData = [
         { title: "영어그림책 읽기", age: "6~7세", loc: "청주", place: "내수도서관", applyStart: "", applyEnd: "3/6(금) 10:30", applyNote: "", date: "3~5월 매주 수요일 16:00-18:00", costType: "유료 (5,000원)", link: "https://blog.naver.com/hey_cheongju/224202960352" },
         { title: "그림책과 보드게임", age: "초2~초5", loc: "진천", place: "진천교육도서관", applyStart: "", applyEnd: "3/6(금) 17:00", applyNote: "선착순", date: "4/3(금)~5/22(금) 매주 금요일 15:30-17:30", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224181433605" },
@@ -339,11 +350,10 @@
         { title: "맞춤형 양육멘토링 '내짝꿍'", age: "학부모", loc: "청주", place: "청주시아동복지관", applyStart: "", applyEnd: "", applyNote: "연중상시 (최대 20명)", date: "평일 09-18시 (가정방문/전화상담)", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224148909268" },
         { title: "2026 충북아빠단 모집", age: "학부모 (충북 거주 아빠)", loc: "충북", place: "인구보건복지협회 충북세종지회", applyStart: "", applyEnd: "", applyNote: "연중상시", date: "해당정보 없음", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224157608512" },
         
-        // 제휴 이벤트
+        // ✅ 제휴 이벤트 데이터 1개만 남김
         { type: "affiliate", title: "[제휴] (전)영어유치원/(현)캐나다어린이집 교사에게 듣는 엄마표 영어 학습법(6-7세)", age: "6~7세 학부모", loc: "온라인", place: "쌍방향 비대면(ZOOM)", applyStart: "", applyEnd: "", applyNote: "3월 중(coming soon)", date: "3월 중(coming soon)", costType: "유료 (9,900원)", link: "javascript:alert('준비중입니다! 곧 찾아올게요.');" }
     ];
 
-    // 🌟 분리된 접수시작/마감 데이터로 오늘/내일 상태를 정확히 판단하는 로직
     function processEventDates() {
         const today = new Date();
         const tomorrow = new Date(today);
@@ -361,9 +371,9 @@
             item.isTodayClose = false;
             item.isTomorrowOpen = false;
             item.isTomorrowClose = false;
-            item.type = "ongoing"; // 기본은 모두 '현재 접수중'
+            item.type = "ongoing"; 
 
-            // 1. 상태 판단 (마감일에 오늘 날짜가 있는지, 마감/오픈일에 내일 날짜가 있는지 확인)
+            // 1. 상태 판단 (마감일에 오늘 날짜가 있는지, 마감/오픈일에 내일 날짜가 있는지 정확히 확인)
             if (item.applyEnd && item.applyEnd.includes(todayStr)) item.isTodayClose = true;
             if (item.applyStart && item.applyStart.includes(tomorrowStr)) item.isTomorrowOpen = true;
             if (item.applyEnd && item.applyEnd.includes(tomorrowStr)) item.isTomorrowClose = true;
@@ -373,7 +383,7 @@
                 item.type = "tomorrow";
             }
 
-            // 2. 화면에 보여줄 텍스트 깔끔하게 조합
+            // 2. 화면 텍스트 조립
             let text = '';
             if (item.applyStart && item.applyEnd) {
                 text = `${item.applyStart} ~ ${item.applyEnd}`;
@@ -391,8 +401,7 @@
         });
     }
 
-    // --- 탭 및 필터 상태 관리 ---
-    let currentTab = 'ongoing'; // 처음 접속 시 '현재 접수중'이 활성화됨
+    let currentTab = 'ongoing';
 
     function changeTab(element, type) {
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -433,20 +442,22 @@
         }
 
         filteredData.forEach(item => {
+            // 비용 상태 라벨 처리 (제휴 이벤트도 동일하게 유/무료 색상 적용)
             let safeCost = item.costType || '비용정보 없음';
             if (safeCost === '해당정보 없음') safeCost = '비용정보 없음';
             
             let costBadgeClass = 'badge-info';
-            if (item.type === 'affiliate') costBadgeClass = 'badge-affiliate';
-            else if (safeCost.includes('무료')) costBadgeClass = 'badge-free';
+            if (safeCost.includes('무료')) costBadgeClass = 'badge-free';
             else if (safeCost.includes('유료')) costBadgeClass = 'badge-paid';
 
             let dateBadges = '';
+            // ✅ 제휴이벤트인 경우 보라색 뱃지 추가 노출
+            if (item.type === 'affiliate') dateBadges += `<span class="badge badge-affiliate">제휴이벤트</span> `;
             if (item.isTodayClose) dateBadges += `<span class="badge badge-today">오늘마감</span> `;
             if (item.isTomorrowOpen) dateBadges += `<span class="badge badge-open">내일오픈</span> `;
             if (item.isTomorrowClose) dateBadges += `<span class="badge badge-close">내일마감</span> `;
 
-            // 오늘 마감일 경우 날짜 텍스트를 빨간색으로 강조
+            // 오늘 마감일 경우 텍스트 빨간색으로 강조
             let applyTextStyle = 'color:var(--text-sub);';
             if (item.isTodayClose) applyTextStyle = 'color:#E53935; font-weight:700;';
 
@@ -457,7 +468,7 @@
                             ${dateBadges}
                             <span class="badge badge-loc">${item.loc || ''}</span>
                             <span class="badge badge-age">${item.age || ''}</span>
-                            <span class="badge ${costBadgeClass}">${item.type === 'affiliate' ? '제휴혜택' : safeCost}</span>
+                            <span class="badge ${costBadgeClass}">${safeCost}</span>
                         </div>
                     </div>
                     <h2 class="title">${item.title || ''}</h2>
@@ -476,7 +487,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         initLastUpdated();
         initVisitCounters();
-        processEventDates(); // 분리된 데이터를 기반으로 날짜를 처리합니다.
+        processEventDates(); 
         applyFilters(); 
     });
 </script>
