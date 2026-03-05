@@ -98,7 +98,7 @@
         .badge-age { background-color: #9b59b6; }
         .badge-free { background-color: #e74c3c; }
         .badge-paid { background-color: #f39c12; }
-        .badge-info { background-color: #7f8c8d; } /* 비용정보 없음 추가 */
+        .badge-info { background-color: #7f8c8d; }
         .badge-tomorrow { background-color: #e91e63; }
         
         .title { font-size: 1.05rem; font-weight: 700; margin: 0 0 8px 0; line-height: 1.4; word-break: keep-all; }
@@ -137,9 +137,9 @@
     </header>
 
     <div class="tabs">
-        <div class="tab active" onclick="filterData('all')">전체보기</div>
-        <div class="tab" onclick="filterData('tomorrow')">내일 오픈/마감</div>
-        <div class="tab" onclick="filterData('ongoing')">현재 진행 중</div>
+        <div class="tab active" onclick="filterData(this, 'all')">전체보기</div>
+        <div class="tab" onclick="filterData(this, 'tomorrow')">내일 오픈/마감</div>
+        <div class="tab" onclick="filterData(this, 'ongoing')">현재 진행 중</div>
     </div>
 
     <div class="content" id="list-container">
@@ -147,7 +147,6 @@
 </div>
 
 <script>
-    // 전체 44개 데이터 포함
     const eventData = [
         // ---------- 내일 오픈/마감 (tomorrow) ----------
         { type: "tomorrow", loc: "청주", age: "초등학생", title: "말 키링 만들기", place: "상당도서관", date: "3/14(토) 13/14/15시 총 3회", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224202590610", applyOpen: "2026-03-04 10:00", applyClose: "", applyNote: "선착순" },
@@ -184,4 +183,86 @@
         { type: "ongoing", loc: "청주", age: "7세 이상", title: "어린이(영어)뮤지컬 비밀의 화원", place: "문화제조창 한국공예관", date: "3/14(토)-22(일) 토/일", costType: "무료(예약금환불)", link: "https://blog.naver.com/hey_cheongju/224194573731", applyOpen: "", applyClose: "", applyNote: "" },
         { type: "ongoing", loc: "천안", age: "22년생 이상", title: "노래극-뜀뛰는 여관", place: "천안어린이꿈누리터", date: "3/14(토)~22(일) 토/일", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224191920604", applyOpen: "", applyClose: "2026-03-22", applyNote: "" },
         { type: "ongoing", loc: "세종", age: "5~9세", title: "한글 놀이터 세종관", place: "세종문화예술회관", date: "상시(월요일 휴관)", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224194529393", applyOpen: "", applyClose: "", applyNote: "" },
-        { type: "ongoing", loc: "대전", age: "초등학생", title: "슈퍼 로봇팔과 함께 AI탐험", place: "국립중앙과학관", date: "3월 매주 목
+        { type: "ongoing", loc: "대전", age: "초등학생", title: "슈퍼 로봇팔과 함께 AI탐험", place: "국립중앙과학관", date: "3월 매주 목-토", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224194547580", applyOpen: "", applyClose: "", applyNote: "" },
+        { type: "ongoing", loc: "대전", age: "만 5세 이상", title: "지브리 & 뮤지컬 오케스트라 콘서트", place: "대전예술의전당 아트홀", date: "3/29(일) 16시", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224176481049", applyOpen: "", applyClose: "2026-03-28 11:00", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "0세-만3세", title: "충북콩콩나무 3월 사전예약", place: "상당구 용담로 7", date: "3월 중 화~토요일", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224183049755", applyOpen: "", applyClose: "2026-03-28", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "0세-만5세", title: "놀꽃마루 3월 사전예약", place: "대성로122번길 67", date: "3월 중 수~토요일", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224183050839", applyOpen: "", applyClose: "2026-03-28", applyNote: "" },
+        { type: "ongoing", loc: "충북", age: "연령제한없음", title: "미디어교육센터 토요자율체험", place: "충북미디어교육센터", date: "3월 매주 토요일", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224190942046", applyOpen: "", applyClose: "2026-03-28", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "연령제한없음", title: "온수 실내족욕체험", place: "초정행궁", date: "1/5(월)-3/30(월)", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224144759309", applyOpen: "", applyClose: "2026-03-30", applyNote: "" },
+        { type: "ongoing", loc: "대전", age: "36개월 이상", title: "춤으로 그리는 동화 '피노키오'", place: "대전예술의전당", date: "4/4(토) 11/14시", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224191924957", applyOpen: "", applyClose: "2026-04-04", applyNote: "" },
+        { type: "ongoing", loc: "세종", age: "24개월 이상", title: "가족뮤지컬 〈넘버블록스〉", place: "세종예술의전당", date: "4/4(토)~4/5(일)", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224181863329", applyOpen: "", applyClose: "2026-04-04", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "가족", title: "2026 가족책꽂이 분양", place: "청주기적의도서관", date: "3-11월 중 한달", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224164016360", applyOpen: "", applyClose: "", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "아동+양육자", title: "우리아이 마음지도 찾기", place: "청주시아동복지관", date: "온라인/전화", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224148922038", applyOpen: "", applyClose: "", applyNote: "" },
+        { type: "ongoing", loc: "청주", age: "양육자", title: "맞춤형 양육멘토링 '내짝꿍'", place: "청주시아동복지관", date: "평일 09-18시", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224148909268", applyOpen: "", applyClose: "", applyNote: "최대 20명" },
+        { type: "ongoing", loc: "충북", age: "아빠", title: "2026 충북아빠단 모집", place: "인구보건복지협회", date: "(활동 안내)", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224157608512", applyOpen: "", applyClose: "", applyNote: "" }
+    ];
+
+    function renderCards(filterType) {
+        const container = document.getElementById('list-container');
+        container.innerHTML = '';
+
+        const filteredData = eventData.filter(item => filterType === 'all' || item.type === filterType);
+
+        filteredData.forEach(item => {
+            // 비용 상태 안전 체크
+            const safeCostType = item.costType || '정보없음';
+            let costBadgeClass = 'badge-info';
+            if (safeCostType.includes('무료')) {
+                costBadgeClass = 'badge-free';
+            } else if (safeCostType.includes('유료')) {
+                costBadgeClass = 'badge-paid';
+            }
+
+            const tomorrowBadge = item.type === 'tomorrow' ? `<span class="badge badge-tomorrow">내일오픈/마감</span>` : '';
+            
+            // 접수 기간 텍스트 조합
+            let applyText = '';
+            if (item.applyOpen && item.applyClose) {
+                applyText = `${item.applyOpen} ~ ${item.applyClose}`;
+            } else if (item.applyOpen) {
+                applyText = `${item.applyOpen} 부터`;
+            } else if (item.applyClose) {
+                applyText = `<span style="color:#e74c3c;">${item.applyClose} 마감</span>`;
+            } else {
+                applyText = '별도 공지 및 상시';
+            }
+            if (item.applyNote) {
+                applyText += ` <span style="color:#e91e63; font-weight:700; font-size:0.8rem;">[${item.applyNote}]</span>`;
+            }
+
+            const cardHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="badges">
+                            ${tomorrowBadge}
+                            <span class="badge badge-loc">${item.loc || ''}</span>
+                            <span class="badge badge-age">${item.age || ''}</span>
+                            <span class="badge ${costBadgeClass}">${safeCostType}</span>
+                        </div>
+                    </div>
+                    <h2 class="title">${item.title || ''}</h2>
+                    <div class="info-row"><div class="info-label">장소/방법</div><div class="info-desc">${item.place || ''}</div></div>
+                    <div class="info-row"><div class="info-label">접수기간</div><div class="info-desc">${applyText}</div></div>
+                    <div class="info-row"><div class="info-label">운영일정</div><div class="info-desc">${item.date || '정보없음'}</div></div>
+                    <a href="${item.link || '#'}" target="_blank" class="btn-link">상세보기 및 예약 (블로그) ↗</a>
+                </div>
+            `;
+            container.innerHTML += cardHTML;
+        });
+    }
+
+    // 클릭한 탭의 디자인을 바꾸고 데이터를 필터링하는 함수
+    function filterData(element, type) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        element.classList.add('active');
+        renderCards(type);
+    }
+
+    // 웹페이지 로딩이 완료되면 안전하게 첫 화면(전체보기)을 그려줍니다.
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCards('all');
+    });
+</script>
+
+</body>
+</html>
