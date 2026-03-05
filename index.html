@@ -33,29 +33,59 @@
         header {
             background-color: var(--primary-color);
             color: white;
-            padding: 20px;
-            text-align: center;
+            padding: 15px 20px;
             position: sticky;
             top: 0;
             z-index: 100;
         }
-        h1 { margin: 0; font-size: 1.2rem; }
-        .sub-header { font-size: 0.8rem; opacity: 0.8; margin-top: 5px; }
+        h1 { margin: 0; font-size: 1.25rem; font-weight: 700; text-align: center; }
+        .sub-header { font-size: 0.75rem; opacity: 0.85; margin-top: 4px; text-align: center; }
         
+        /* 통계 및 공유 컨테이너 */
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            font-size: 0.8rem;
+        }
+        .stats-badge {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .btn-share {
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.2s;
+        }
+        .btn-share:hover { background: rgba(255, 255, 255, 0.35); }
+        .btn-share svg { width: 14px; height: 14px; fill: currentColor; }
+
         /* 탭 메뉴 */
         .tabs {
             display: flex;
             background: white;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
-            top: 65px;
+            top: 96px; /* 헤더 높이에 맞춰 조정 */
             z-index: 99;
         }
         .tab {
             flex: 1;
             text-align: center;
-            padding: 15px 0;
+            padding: 12px 0;
             cursor: pointer;
+            font-size: 0.95rem;
             font-weight: 500;
             color: var(--text-sub);
             border-bottom: 3px solid transparent;
@@ -67,6 +97,29 @@
             font-weight: 700;
         }
 
+        /* 필터 영역 */
+        .filters {
+            display: flex;
+            gap: 8px;
+            padding: 10px 15px;
+            background: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 141px; /* 탭 높이 아래에 고정 */
+            z-index: 98;
+        }
+        .filter-select {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #444;
+            background-color: white;
+            outline: none;
+            cursor: pointer;
+        }
+
         /* 리스트 영역 */
         .content { padding: 15px; }
         .card {
@@ -74,12 +127,12 @@
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
             border: 1px solid var(--border-color);
             display: block;
             transition: transform 0.2s;
         }
-        .card:hover { transform: translateY(-2px); }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -96,21 +149,34 @@
         }
         .badge-loc { background-color: #3498db; }
         .badge-age { background-color: #9b59b6; }
-        .badge-free { background-color: #e74c3c; }
+        .badge-free { background-color: #4CAF50; }
         .badge-paid { background-color: #f39c12; }
         .badge-info { background-color: #7f8c8d; }
-        .badge-tomorrow { background-color: #e91e63; }
+        .badge-open { background-color: #ff9800; } /* 내일오픈 주황색 */
+        .badge-close { background-color: #e74c3c; } /* 내일마감 빨간색 */
         
-        .title { font-size: 1.05rem; font-weight: 700; margin: 0 0 8px 0; line-height: 1.4; word-break: keep-all; }
+        .title { font-size: 1.05rem; font-weight: 700; margin: 0 0 10px 0; line-height: 1.4; word-break: keep-all; }
+        
+        /* 정보 레이아웃 정렬 완벽 수정 */
         .info-row {
             font-size: 0.85rem;
             color: var(--text-sub);
             margin-bottom: 6px;
             display: flex;
-            align-items: flex-start;
+            align-items: flex-start; /* 위쪽 기준선 정렬 */
         }
-        .info-label { font-weight: 500; width: 60px; flex-shrink: 0; color: #555; margin-top: 1px; }
-        .info-desc { word-break: keep-all; line-height: 1.3; }
+        .info-label { 
+            font-weight: 500; 
+            width: 65px; 
+            flex-shrink: 0; 
+            color: #555; 
+            line-height: 1.4;
+        }
+        .info-desc { 
+            flex: 1;
+            word-break: keep-all; 
+            line-height: 1.4; 
+        }
         
         .btn-link {
             display: block;
@@ -121,25 +187,60 @@
             padding: 12px;
             border-radius: 6px;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 700;
             margin-top: 15px;
             transition: background-color 0.2s;
         }
         .btn-link:hover { background-color: #388E3C; }
+        
+        .empty-state { text-align: center; padding: 40px 0; color: #888; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <header>
+    <header id="app-header">
         <h1>헤이청주 📢 오픈/마감 일정</h1>
         <div class="sub-header">최근 업데이트: 3/5(목) 16:30</div>
+        <div class="header-actions">
+            <div class="stats-badge">
+                오늘 방문 <span id="count-today" style="font-weight:700; color:#fff;">0</span> / 누적 <span id="count-total">0</span>
+            </div>
+            <button class="btn-share" onclick="sharePage()">
+                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                공유하기
+            </button>
+        </div>
     </header>
 
     <div class="tabs">
-        <div class="tab active" onclick="filterData(this, 'all')">전체보기</div>
-        <div class="tab" onclick="filterData(this, 'tomorrow')">내일 오픈/마감</div>
-        <div class="tab" onclick="filterData(this, 'ongoing')">현재 진행 중</div>
+        <div class="tab active" onclick="changeTab(this, 'all')">전체보기</div>
+        <div class="tab" onclick="changeTab(this, 'tomorrow')">내일 오픈/마감</div>
+        <div class="tab" onclick="changeTab(this, 'ongoing')">현재 진행 중</div>
+    </div>
+
+    <div class="filters">
+        <select id="filter-loc" class="filter-select" onchange="applyFilters()">
+            <option value="all">지역 전체</option>
+            <option value="청주">청주</option>
+            <option value="세종">세종</option>
+            <option value="대전">대전</option>
+            <option value="천안">천안</option>
+            <option value="증평">증평</option>
+            <option value="진천">진천</option>
+            <option value="음성">음성</option>
+        </select>
+        <select id="filter-age" class="filter-select" onchange="applyFilters()">
+            <option value="all">연령 전체</option>
+            <option value="미취학">미취학</option>
+            <option value="초등">초등</option>
+            <option value="중등이상">중등 이상</option>
+        </select>
+        <select id="filter-cost" class="filter-select" onchange="applyFilters()">
+            <option value="all">비용 전체</option>
+            <option value="무료">무료</option>
+            <option value="유료">유료</option>
+        </select>
     </div>
 
     <div class="content" id="list-container">
@@ -147,32 +248,71 @@
 </div>
 
 <script>
+    // --- 방문자 카운터 로직 ---
+    function initVisitCounters() {
+        let total = localStorage.getItem('hey_total_visits') || 0;
+        total = parseInt(total) + 1;
+        localStorage.setItem('hey_total_visits', total);
+
+        const todayStr = new Date().toLocaleDateString();
+        let storedDate = localStorage.getItem('hey_visit_date');
+        let today = localStorage.getItem('hey_today_visits') || 0;
+
+        if (storedDate !== todayStr) {
+            today = 1;
+            localStorage.setItem('hey_visit_date', todayStr);
+        } else {
+            today = parseInt(today) + 1;
+        }
+        localStorage.setItem('hey_today_visits', today);
+
+        document.getElementById('count-total').innerText = total;
+        document.getElementById('count-today').innerText = today;
+    }
+
+    // --- 공유하기 로직 ---
+    function sharePage() {
+        const shareData = {
+            title: '헤이청주 📢 오픈/마감 일정',
+            text: '우리 지역 체험 행사 일정을 한눈에 확인하세요!',
+            url: window.location.href
+        };
+        if (navigator.share) {
+            navigator.share(shareData).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('링크가 복사되었습니다! 원하시는 곳에 붙여넣기 해주세요.');
+            });
+        }
+    }
+
+    // --- 44개 전체 데이터 ---
     const eventData = [
-        // ---------- 내일 오픈/마감 (tomorrow) ----------
+        // 내일 오픈/마감 (tomorrow)
         { type: "tomorrow", loc: "청주", age: "초등학생", title: "말 키링 만들기", place: "상당도서관", date: "3/14(토) 13/14/15시 총 3회", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224202590610", applyOpen: "2026-03-04 10:00", applyClose: "", applyNote: "선착순" },
         { type: "tomorrow", loc: "청주", age: "초1~고3", title: "토요 예술체험 프로그램", place: "충북교육문화원", date: "상반기(3-6월)/하반기(8-11월) 토요일", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224187380791", applyOpen: "2026-03-04 09:00", applyClose: "2026-03-10 18:00", applyNote: "추첨제" },
-        { type: "tomorrow", loc: "청주", age: "20년 11월~23년 4월생", title: "과일타르트 만들기", place: "진로팡 2층(용암동)", date: "3/20(금) 16-17시", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224193214158", applyOpen: "2026-03-04 12:00", applyClose: "", applyNote: "선착순" },
+        { type: "tomorrow", loc: "청주", age: "20년 11월생~23년 4월생", title: "과일타르트 만들기", place: "진로팡 2층(용암동)", date: "3/20(금) 16-17시", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224193214158", applyOpen: "2026-03-04 12:00", applyClose: "", applyNote: "선착순" },
         { type: "tomorrow", loc: "증평", age: "유아~성인", title: "마블링 도자기 만들기", place: "증평민속체험박물관", date: "4/4(토) 13-15시", costType: "유료(1만원)", link: "https://blog.naver.com/hey_cheongju/224198560179", applyOpen: "2026-03-04 12:00", applyClose: "", applyNote: "선착순" },
         { type: "tomorrow", loc: "증평", age: "유아~성인", title: "전통간식 오란다와 깨강정 만들기", place: "증평민속체험박물관", date: "4/25(토) 13-15시", costType: "유료(1만원)", link: "https://blog.naver.com/hey_cheongju/224199480763", applyOpen: "2026-03-04 12:00", applyClose: "", applyNote: "선착순" },
         { type: "tomorrow", loc: "청주", age: "초등2~중등2(청주거주)", title: "꿈의 무용단 청주 신규단원 모집", place: "동부창고 35동", date: "3~10월 매주 화/목 16-18시", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224181840776", applyOpen: "", applyClose: "2026-03-04", applyNote: "선발제" },
         
-        // ---------- 현재 진행 중 (ongoing) ----------
+        // 현재 진행 중 (ongoing)
         { type: "ongoing", loc: "청주", age: "임산부, 0~4세 부모", title: "안전·건강 올인원 영유아 육아 클래스", place: "청주시가족센터", date: "3/24(화)~4/7(화) 매주 화요일", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224203085197", applyOpen: "2026-03-03 09:00", applyClose: "2026-03-23 18:00", applyNote: "로그인 필요" },
         { type: "ongoing", loc: "청주", age: "6~7세", title: "영어그림책 읽기", place: "내수도서관", date: "3~5월 매주 수요일", costType: "유료(5천원)", link: "https://blog.naver.com/hey_cheongju/224202960352", applyOpen: "", applyClose: "2026-03-06", applyNote: "" },
         { type: "ongoing", loc: "청주", age: "초등 1-2학년", title: "그림책 속 이야기, 보드게임으로 만나다", place: "오창도서관", date: "3~5월 매주 화요일", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224202953918", applyOpen: "", applyClose: "2026-03-06 18:00", applyNote: "" },
         { type: "ongoing", loc: "청주", age: "초등학생 이상", title: "우주 마을과 함께하는 태양관측회", place: "기적의 도서관", date: "3/21(토) 10-12시", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224201590101", applyOpen: "2026-03-03 10:00", applyClose: "2026-03-03", applyNote: "선착순" },
         { type: "ongoing", loc: "청주", age: "전연령", title: "정월대보름 개기월식 공개관측회", place: "문암생태공원", date: "3/3(화) 19:00-21:30", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224201582826", applyOpen: "", applyClose: "", applyNote: "행사 당일 16시 공지 확인" },
         { type: "ongoing", loc: "청주", age: "25년 3월~7월생", title: "[도리도리] 상반기 책놀이 추가모집", place: "오송도서관", date: "3/12(목)~4/20(목) 주1회", costType: "무료(재료비별도)", link: "https://blog.naver.com/hey_cheongju/224201615730", applyOpen: "2026-03-03 10:00", applyClose: "2026-03-03", applyNote: "선착순" },
-        { type: "ongoing", loc: "청주", age: "2022년~2023년생", title: "[쭈욱쭈욱] 상반기 책놀이 추가모집", place: "청주시립도서관", date: "3/11(수)~4/29(수) 주1회", costType: "무료(재료비별도)", link: "https://blog.naver.com/hey_cheongju/224201624054", applyOpen: "2026-03-03 10:00", applyClose: "2026-03-03", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "2022년생~2023년생", title: "[쭈욱쭈욱] 상반기 책놀이 추가모집", place: "청주시립도서관", date: "3/11(수)~4/29(수) 주1회", costType: "무료(재료비별도)", link: "https://blog.naver.com/hey_cheongju/224201624054", applyOpen: "2026-03-03 10:00", applyClose: "2026-03-03", applyNote: "선착순" },
         { type: "ongoing", loc: "천안", age: "6세 이상", title: "주말가족교실(별자리+키링)", place: "천안홍대용과학관", date: "3~6월 매주 토/일", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224198541781", applyOpen: "2026-03-03 12:00", applyClose: "", applyNote: "선착순" },
-        { type: "ongoing", loc: "청주", age: "20년~23년생", title: "토요가족체험", place: "충북유아교육진흥원", date: "3/14(토) 09:30-12:00", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224194509093", applyOpen: "2026-03-02 10:00", applyClose: "2026-03-06 17:00", applyNote: "선착순" },
+        { type: "ongoing", loc: "청주", age: "2020년생~2023년생", title: "토요가족체험", place: "충북유아교육진흥원", date: "3/14(토) 09:30-12:00", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224194509093", applyOpen: "2026-03-02 10:00", applyClose: "2026-03-06 17:00", applyNote: "선착순" },
         { type: "ongoing", loc: "청주", age: "19-22년생", title: "체험형VR 동화구연(콩나무)", place: "오송도서관", date: "3/14(토) or 28(토)", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224200624205", applyOpen: "2026-03-02 10:00", applyClose: "2026-03-02", applyNote: "선착순" },
         { type: "ongoing", loc: "청주", age: "유아~초등저", title: "어린이 노오븐 쿠킹 원데이클래스", place: "청남대 나라사랑교육문화원", date: "3/7(토) or 14(토)", costType: "유료(입장료포함)", link: "https://blog.naver.com/hey_cheongju/224200176365", applyOpen: "2026-02-28 09:00", applyClose: "2026-02-28", applyNote: "선착순" },
         { type: "ongoing", loc: "세종", age: "5~9세", title: "과학예술융합교육(자원순환)", place: "국립어린이박물관", date: "3/7(토)~3/28(토) 매주 토", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224189929587", applyOpen: "", applyClose: "", applyNote: "로그인 필요" },
         { type: "ongoing", loc: "청주", age: "전연령", title: "새활용공예체험프로그램 '더새로움'", place: "청주새활용시민센터", date: "선착순 예약", costType: "무/유료", link: "https://m.blog.naver.com/hey_cheongju/224197945325", applyOpen: "", applyClose: "", applyNote: "선착순" },
         { type: "ongoing", loc: "청주", age: "4~13세", title: "직업체험 테마파크 키자니아", place: "현대백화점 충청점", date: "(운영기간 별도 안내)", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224197760786", applyOpen: "", applyClose: "", applyNote: "선착순" },
         { type: "ongoing", loc: "청주", age: "초/중/고등학생", title: "(열린탐험대) 드론탐험대/예술탐험대", place: "청주열린도서관", date: "4~11월", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224193196956", applyOpen: "", applyClose: "2026-02-26", applyNote: "선착순" },
-        { type: "ongoing", loc: "청주", age: "6세~초등 6", title: "(1학기) 호기심 탐험대", place: "청주기적의도서관", date: "3~5월 주 1회(총 10차시)", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224185579874", applyOpen: "", applyClose: "", applyNote: "마감 상이" },
+        { type: "ongoing", loc: "청주", age: "6세~초등 6학년", title: "(1학기) 호기심 탐험대", place: "청주기적의도서관", date: "3~5월 주 1회(총 10차시)", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224185579874", applyOpen: "", applyClose: "", applyNote: "마감 상이" },
         { type: "ongoing", loc: "진천", age: "초등 2-5학년", title: "그림책 보드게임", place: "진천교육도서관", date: "4/3(금)~5/22(금) 매주 금", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224181433605", applyOpen: "", applyClose: "2026-03-06", applyNote: "" },
         { type: "ongoing", loc: "청주", age: "24개월 이상", title: "가족뮤지컬 아기돼지삼형제", place: "청주아트홀", date: "3/7(토) 11/14/16시", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224148692103", applyOpen: "", applyClose: "2026-03-07", applyNote: "" },
         { type: "ongoing", loc: "음성", age: "초등학생", title: "상반기 도서관 교육프로그램", place: "음성교육도서관", date: "3~5월 중 10차시", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224195916253", applyOpen: "", applyClose: "2026-03-11", applyNote: "" },
@@ -197,35 +337,127 @@
         { type: "ongoing", loc: "충북", age: "아빠", title: "2026 충북아빠단 모집", place: "인구보건복지협회", date: "(활동 안내)", costType: "비용정보 없음", link: "https://blog.naver.com/hey_cheongju/224157608512", applyOpen: "", applyClose: "", applyNote: "" }
     ];
 
-    function renderCards(filterType) {
+    // --- 연령 그룹 자동 매핑 함수 ---
+    function getAgeGroups(ageStr) {
+        if (!ageStr) return ['미취학', '초등', '중등이상'];
+        let groups = new Set();
+        
+        // 포괄적 단어
+        if (/(전연령|연령제한없음|가족|양육|부모|아빠|성인)/.test(ageStr)) {
+            groups.add('미취학'); groups.add('초등'); groups.add('중등이상');
+        }
+        // 미취학 조건
+        if (/(유아|임산부|개월|년생|0세|만3세|만5세|3세|4세|5세|6세|7세|미취학)/.test(ageStr)) {
+            groups.add('미취학');
+        }
+        // 초등 조건
+        if (/(초등|초[1-6]|4~13세|5~9세|8세|9세|10세|11세|12세|13세)/.test(ageStr)) {
+            groups.add('초등');
+        }
+        // 중등 이상 조건
+        if (/(중등|고등|청소년|14세이상|중[1-3]|고[1-3])/.test(ageStr)) {
+            groups.add('중등이상');
+        }
+        // '이상' 이 들어간 경우에 대한 추가 처리
+        if (ageStr.includes('이상')) {
+            if (/(초등|8세|13세)/.test(ageStr)) { groups.add('초등'); groups.add('중등이상'); }
+            else if (/(개월|세|유아)/.test(ageStr)) { groups.add('미취학'); groups.add('초등'); groups.add('중등이상'); }
+        }
+
+        return groups.size > 0 ? Array.from(groups) : ['미취학', '초등', '중등이상'];
+    }
+
+    // --- 날짜 포맷팅 함수 (YYYY-MM-DD HH:mm -> M/D(요일) HH:mm) ---
+    function formatToShortDate(dateStr) {
+        if (!dateStr) return '';
+        const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}:\d{2}))?/);
+        if (match) {
+            const y = parseInt(match[1], 10);
+            const m = parseInt(match[2], 10);
+            const d = parseInt(match[3], 10);
+            const time = match[4] ? ` ${match[4]}` : '';
+            const dateObj = new Date(y, m - 1, d);
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            return `${m}/${d}(${days[dateObj.getDay()]})${time}`;
+        }
+        return dateStr; // 포맷이 안 맞으면 원본 반환
+    }
+
+    // --- 필터 상태 관리 ---
+    let currentTab = 'all';
+
+    function changeTab(element, type) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        element.classList.add('active');
+        currentTab = type;
+        applyFilters(); // 탭 변경 시에도 필터 적용 렌더링
+    }
+
+    function applyFilters() {
+        const filterLoc = document.getElementById('filter-loc').value;
+        const filterAge = document.getElementById('filter-age').value;
+        const filterCost = document.getElementById('filter-cost').value;
+
         const container = document.getElementById('list-container');
         container.innerHTML = '';
 
-        const filteredData = eventData.filter(item => filterType === 'all' || item.type === filterType);
+        const filteredData = eventData.filter(item => {
+            // 1. 탭 필터
+            const matchTab = currentTab === 'all' || item.type === currentTab;
+            // 2. 지역 필터
+            const matchLoc = filterLoc === 'all' || (item.loc && item.loc.includes(filterLoc));
+            // 3. 연령 필터
+            const matchAge = filterAge === 'all' || getAgeGroups(item.age).includes(filterAge);
+            // 4. 비용 필터
+            let safeCost = item.costType || '정보없음';
+            let itemCostGroup = '기타';
+            if (safeCost.includes('무료')) itemCostGroup = '무료';
+            else if (safeCost.includes('유료')) itemCostGroup = '유료';
+            const matchCost = filterCost === 'all' || itemCostGroup === filterCost;
+
+            return matchTab && matchLoc && matchAge && matchCost;
+        });
+
+        if (filteredData.length === 0) {
+            container.innerHTML = '<div class="empty-state">해당하는 조건의 행사가 없습니다. 😥</div>';
+            return;
+        }
 
         filteredData.forEach(item => {
-            // 비용 상태 안전 체크
-            const safeCostType = item.costType || '정보없음';
+            // 비용 색상 처리
+            const safeCost = item.costType || '정보없음';
             let costBadgeClass = 'badge-info';
-            if (safeCostType.includes('무료')) {
-                costBadgeClass = 'badge-free';
-            } else if (safeCostType.includes('유료')) {
-                costBadgeClass = 'badge-paid';
+            if (safeCost.includes('무료')) costBadgeClass = 'badge-free';
+            else if (safeCost.includes('유료')) costBadgeClass = 'badge-paid';
+
+            // 내일오픈 / 내일마감 분류
+            let tomorrowBadge = '';
+            if (item.type === 'tomorrow') {
+                if (item.applyOpen && item.applyOpen.includes('03-04')) {
+                    tomorrowBadge += `<span class="badge badge-open">내일오픈</span> `;
+                }
+                if (item.applyClose && item.applyClose.includes('03-04')) {
+                    tomorrowBadge += `<span class="badge badge-close">내일마감</span> `;
+                }
+                // 만약 둘다 아니라면 방어코드
+                if (!tomorrowBadge) tomorrowBadge = `<span class="badge badge-open">내일오픈/마감</span> `;
+            }
+            
+            // 날짜 포맷 적용 및 텍스트 조합
+            let applyText = '';
+            const fOpen = formatToShortDate(item.applyOpen);
+            const fClose = formatToShortDate(item.applyClose);
+
+            if (fOpen && fClose) {
+                applyText = `${fOpen} ~ ${fClose}`;
+            } else if (fOpen) {
+                applyText = `${fOpen} 오픈`;
+            } else if (fClose) {
+                applyText = `<span style="color:#e74c3c;">${fClose} 마감</span>`;
+            } else {
+                applyText = '별도 공지 및 상시접수';
             }
 
-            const tomorrowBadge = item.type === 'tomorrow' ? `<span class="badge badge-tomorrow">내일오픈/마감</span>` : '';
-            
-            // 접수 기간 텍스트 조합
-            let applyText = '';
-            if (item.applyOpen && item.applyClose) {
-                applyText = `${item.applyOpen} ~ ${item.applyClose}`;
-            } else if (item.applyOpen) {
-                applyText = `${item.applyOpen} 부터`;
-            } else if (item.applyClose) {
-                applyText = `<span style="color:#e74c3c;">${item.applyClose} 마감</span>`;
-            } else {
-                applyText = '별도 공지 및 상시';
-            }
             if (item.applyNote) {
                 applyText += ` <span style="color:#e91e63; font-weight:700; font-size:0.8rem;">[${item.applyNote}]</span>`;
             }
@@ -237,30 +469,24 @@
                             ${tomorrowBadge}
                             <span class="badge badge-loc">${item.loc || ''}</span>
                             <span class="badge badge-age">${item.age || ''}</span>
-                            <span class="badge ${costBadgeClass}">${safeCostType}</span>
+                            <span class="badge ${costBadgeClass}">${safeCost}</span>
                         </div>
                     </div>
                     <h2 class="title">${item.title || ''}</h2>
                     <div class="info-row"><div class="info-label">장소/방법</div><div class="info-desc">${item.place || ''}</div></div>
                     <div class="info-row"><div class="info-label">접수기간</div><div class="info-desc">${applyText}</div></div>
                     <div class="info-row"><div class="info-label">운영일정</div><div class="info-desc">${item.date || '정보없음'}</div></div>
-                    <a href="${item.link || '#'}" target="_blank" class="btn-link">상세보기 및 예약 (블로그) ↗</a>
+                    <a href="${item.link || '#'}" target="_blank" class="btn-link">상세보기 및 예약 ↗</a>
                 </div>
             `;
             container.innerHTML += cardHTML;
         });
     }
 
-    // 클릭한 탭의 디자인을 바꾸고 데이터를 필터링하는 함수
-    function filterData(element, type) {
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        element.classList.add('active');
-        renderCards(type);
-    }
-
-    // 웹페이지 로딩이 완료되면 안전하게 첫 화면(전체보기)을 그려줍니다.
+    // --- 웹페이지 로딩 시 초기화 ---
     document.addEventListener('DOMContentLoaded', () => {
-        renderCards('all');
+        initVisitCounters();
+        applyFilters(); // 초기 데이터 렌더링
     });
 </script>
 
