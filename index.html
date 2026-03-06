@@ -131,8 +131,18 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .notice-container a[href]:hover {
-            text-decoration: underline;
+/* 마우스가 있는 기기에서만 밑줄 효과 적용 (모바일 터치 잔류 방지) */
+        @media (hover: hover) {
+            .notice-container a[href]:hover {
+                text-decoration: underline;
+            }
+        }
+        
+        /* 터치 후 클릭(포커스) 상태일 때도 밑줄 안 생기게 확실히 방지 */
+        .notice-container a:focus, 
+        .notice-container a:active {
+            text-decoration: none;
+            outline: none;
         }
 
         /* 🌟 검색창 스타일 */
@@ -685,6 +695,7 @@
 
 </body>
 </html>
+
 
 
 
