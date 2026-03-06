@@ -517,28 +517,25 @@
             return matchTab && matchLoc && matchSearch;
         });
 
-        // 🌟 사전예약 중 탭 완벽 정렬 로직 (1순위 오늘마감 -> 2순위 오픈날짜 -> 3순위 일정임박)
+// 🌟 사전예약 중 탭 마감 임박순 정렬 (1순위 오늘마감 -> 2순위 내일마감 -> 3순위 마감일자 빠른 순)
         if (currentTab === 'ongoing') {
             filteredData.sort((a, b) => {
-                // 1순위: 오늘마감
-                const aTodayClose = a.isTodayClose ? 1 : 0;
-                const bTodayClose = b.isTodayClose ? 1 : 0;
-                if (aTodayClose !== bTodayClose) {
-                    return bTodayClose - aTodayClose; // 1이 위로 올라감
+                // 1순위: 오늘마감 뱃지가 있는 것이 무조건 맨 위로
+                if (a.isTodayClose !== b.isTodayClose) {
+                    return b.isTodayClose ? 1 : -1;
                 }
 
-                // 2순위: 오픈날짜 (applyStart 유무)
-                const aHasStart = a.applyStart ? 1 : 0;
-                const bHasStart = b.applyStart ? 1 : 0;
-                if (aHasStart !== bHasStart) {
-                    return bHasStart - aHasStart; 
+                // 2순위: 내일마감 뱃지가 있는 것이 그다음 순위로
+                if (a.isTomorrowClose !== b.isTomorrowClose) {
+                    return b.isTomorrowClose ? 1 : -1;
                 }
                 
-                // 3순위: 운영일정 날짜 빠른 순
-                const aDateVal = parseDateValue(a.date);
-                const bDateVal = parseDateValue(b.date);
+                // 3순위: 마감일(applyEnd) 텍스트를 분석하여 날짜가 빠른 순서대로 정렬
+                // (마감일이 없는 상시 접수 등은 숫자가 9999로 처리되어 자동으로 맨 밑으로 내려갑니다)
+                const aEndVal = parseDateValue(a.applyEnd);
+                const bEndVal = parseDateValue(b.applyEnd);
                 
-                return aDateVal - bDateVal; 
+                return aEndVal - bEndVal; 
             });
         }
 
@@ -609,3 +606,4 @@
 
 </body>
 </html>
+
