@@ -49,14 +49,14 @@
         header {
             background-color: var(--primary-color);
             color: white;
-            padding: 15px 16px 8px 16px; /* 전체 상하 패딩을 줄여서 세로폭 축소 */
+            padding: 15px 16px 8px 16px; 
             display: flex;
             flex-direction: column;
         }
         
         h1 { 
             margin: 0; 
-            font-size: 1.5rem; /* 제목 조금 더 크게 */
+            font-size: 1.5rem; 
             font-weight: 700; 
             text-align: center; 
         }
@@ -67,16 +67,14 @@
             text-align: center; 
         }
         
-        /* 투데이/공유 버튼 묶음 (여기서 마진을 줄여 통째로 위로 끌어올림) */
         .header-action-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-top: 1px; /* 제목/서브타이틀과 가까워지도록 수치 축소 */
-            margin-bottom: 8px; /* 공지사항과도 바짝 붙임 */
+            margin-top: 1px; 
+            margin-bottom: 8px; 
         }
 
-        /* 방문자 통계 (세로배치) */
         .header-stats {
             display: flex;
             flex-direction: column;
@@ -90,7 +88,6 @@
             margin-left: 5px;
         }
 
-        /* 공유버튼 */
         .btn-share {
             background: rgba(255, 255, 255, 0.25);
             border: none;
@@ -108,7 +105,6 @@
         .btn-share:hover { background: rgba(255, 255, 255, 0.35); }
         .btn-share svg { width: 14px; height: 14px; fill: currentColor; }
 
-        /* 🌟 공지사항 롤링 영역 */
         .notice-container {
             background: rgba(0, 0, 0, 0.15);
             border-radius: 6px;
@@ -131,21 +127,18 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-/* 마우스가 있는 기기에서만 밑줄 효과 적용 (모바일 터치 잔류 방지) */
         @media (hover: hover) {
             .notice-container a[href]:hover {
                 text-decoration: underline;
             }
         }
         
-        /* 터치 후 클릭(포커스) 상태일 때도 밑줄 안 생기게 확실히 방지 */
         .notice-container a:focus, 
         .notice-container a:active {
             text-decoration: none;
             outline: none;
         }
 
-        /* 🌟 검색창 스타일 */
         .search-container {
             padding: 10px 15px;
             background-color: #fff;
@@ -190,13 +183,12 @@
             font-weight: 700;
         }
 
-        /* 🌟 지역 필터 세로폭 최적화 */
         .checkbox-group {
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
-            gap: 5px; /* 간격 축소 */
-            padding: 8px 12px; /* 위아래 패딩 축소 */
+            gap: 5px; 
+            padding: 8px 12px; 
             background: #fafafa;
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -204,11 +196,11 @@
         .checkbox-group::-webkit-scrollbar { display: none; }
         .filter-cb { display: none; }
         .cb-label {
-            padding: 4px 10px; /* 라벨 패딩 축소 */
+            padding: 4px 10px; 
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 16px;
-            font-size: 0.75rem; /* 폰트 사이즈 소폭 축소 */
+            font-size: 0.75rem; 
             color: #555;
             cursor: pointer;
             transition: all 0.2s;
@@ -322,7 +314,7 @@
 
 <div class="app-container">
     <div class="sticky-wrapper">
-	<header id="app-header">
+    <header id="app-header">
             <h1>헤이청주 📢 교육/체험 링크모음</h1>
             <div class="sub-header" id="last-updated-text">최근 업데이트: 계산중...</div>
             
@@ -379,7 +371,6 @@
 </div>
 
 <script>
-    // 🌟 공지사항 데이터 (자유롭게 추가/수정 가능)
     const noticeData = [
         { 
             text: "[⚡내일오픈/마감,긴급정보 실시간 알림 오픈챗 입장하기👆] ", 
@@ -391,20 +382,17 @@
         },
         { 
             text: "※ 간혹 오타가 발생하므로 신청페이지에서 최종 정보확인하기", 
-            link: "" // 링크가 없을 경우 비워두기
+            link: ""
         }
     ];
 
-    // 공지사항 롤링 함수
     function initNotice() {
         let currentIndex = 0;
         const noticeLink = document.getElementById('notice-link');
         
         function updateNotice() {
-            // 1. 투명하게 만들어서 사라지는 효과
             noticeLink.style.opacity = '0';
             
-            // 2. 0.3초 뒤에 텍스트를 바꾸고 다시 나타나게 함
             setTimeout(() => {
                 const data = noticeData[currentIndex];
                 noticeLink.innerText = data.text;
@@ -424,8 +412,8 @@
             }, 300);
         }
 
-        updateNotice(); // 최초 1회 즉시 실행
-        setInterval(updateNotice, 4000); // 4초마다 공지 교체
+        updateNotice(); 
+        setInterval(updateNotice, 4000); 
     }
 
     function initLastUpdated() {
@@ -441,7 +429,13 @@
 
     async function initVisitCounters() {
         const namespace = 'heycheongju_v1'; 
-        const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, ''); 
+        
+        // 🌟 수정됨: 한국 시간(KST)을 기준으로 날짜 문자열(YYYYMMDD)을 생성합니다.
+        const kstNow = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+        const yyyy = kstNow.getFullYear();
+        const mm = String(kstNow.getMonth() + 1).padStart(2, '0');
+        const dd = String(kstNow.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}${mm}${dd}`; 
 
         try {
             const resTotal = await fetch(`https://api.counterapi.dev/v1/${namespace}/total/up`);
@@ -500,9 +494,9 @@
         { type: "ongoing", title: "온수 실내족욕체험", age: "전연령", loc: "청주", place: "초정행궁 초정약수체험관", applyStart: "", applyEnd: "", applyNote: "접수중", date: "1/5(월)-3/30(월)", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224144759309" },
         { type: "ongoing", title: "춤으로 그리는 동화 '피노키오'", age: "36개월 이상", loc: "대전", place: "대전예술의전당", applyStart: "", applyEnd: "", applyNote: "공연 전까지", date: "4/4(토) 11:00/14:00", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224191924957" },
         { type: "ongoing", title: "가족뮤지컬 〈넘버블록스〉", age: "24개월 이상", loc: "세종", place: "세종예술의전당", applyStart: "", applyEnd: "", applyNote: "공연 전까지", date: "4/4(토)~4/5(일) 11:00/14:00/16:00", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224181863329" },
-		{ type: "ongoing", title: "가족뮤지컬 〈우리아빠가 최고야〉", age: "24개월 이상", loc: "대전", place: "평송청소년문화센터 소극장", applyStart: "", applyEnd: "", applyNote: "공연 전까지", date: "3/14(토)~3/15(일)", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224207008405" },
-		{ type: "ongoing", title: "(어린이 북클럽) 한권깊이읽기", age: "초2~초4", loc: "청주", place: "충북교육도서관", applyStart: "3/6(금) 14:00", applyEnd: "모집완료 시", applyNote: "선착순", date: "3/19(목)~7/9(목) 매주 목요일 16:00-17:00", costType: "무료", link: "https://m.blog.naver.com/hey_cheongju/224174434812" },
-		{ type: "ongoing", title: "패밀리 코딩놀이터/난타교실(부모동반)", age: "초1~초6", loc: "청주", place: "청주시가족센터", applyStart: "3/5(목)", applyEnd: "모집완료 시", applyNote: "선착순", date: "3/26(목)~5/28(목) 매주 목요일 19:00-20:30", costType: "유료(1인 35,000원)", link: "https://blog.naver.com/hey_cheongju/224206782924" },
+        { type: "ongoing", title: "가족뮤지컬 〈우리아빠가 최고야〉", age: "24개월 이상", loc: "대전", place: "평송청소년문화센터 소극장", applyStart: "", applyEnd: "", applyNote: "공연 전까지", date: "3/14(토)~3/15(일)", costType: "유료", link: "https://blog.naver.com/hey_cheongju/224207008405" },
+        { type: "ongoing", title: "(어린이 북클럽) 한권깊이읽기", age: "초2~초4", loc: "청주", place: "충북교육도서관", applyStart: "3/6(금) 14:00", applyEnd: "모집완료 시", applyNote: "선착순", date: "3/19(목)~7/9(목) 매주 목요일 16:00-17:00", costType: "무료", link: "https://m.blog.naver.com/hey_cheongju/224174434812" },
+        { type: "ongoing", title: "패밀리 코딩놀이터/난타교실(부모동반)", age: "초1~초6", loc: "청주", place: "청주시가족센터", applyStart: "3/5(목)", applyEnd: "모집완료 시", applyNote: "선착순", date: "3/26(목)~5/28(목) 매주 목요일 19:00-20:30", costType: "유료(1인 35,000원)", link: "https://blog.naver.com/hey_cheongju/224206782924" },
 
         { type: "always", title: "충북콩콩나무 3월 사전예약", age: "영유아 (0세~만3세)", loc: "청주", place: "상당구 용담로 7", applyStart: "", applyEnd: "", applyNote: "3월 예약 진행중", date: "3월 중 화~토요일", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224183049755" },
         { type: "always", title: "놀꽃마루 3월 사전예약", age: "영유아 (0세~만5세)", loc: "청주", place: "대성로122번길 67", applyStart: "", applyEnd: "", applyNote: "3월 예약 진행중", date: "3월 중 수~토요일", costType: "무료", link: "https://blog.naver.com/hey_cheongju/224183050839" },
@@ -578,6 +572,9 @@
         element.classList.add('active');
         currentTab = type;
         applyFilters(); 
+        
+        // 🌟 수정됨: 탭 이동 시 스크롤을 최상단으로 부드럽게 이동합니다.
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function applyFilters() {
@@ -685,7 +682,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        initNotice(); // 🌟 롤링 공지사항 실행
+        initNotice(); 
         initLastUpdated();
         initVisitCounters();
         processEventDates(); 
@@ -695,20 +692,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
