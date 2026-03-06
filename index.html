@@ -45,27 +45,52 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
+/* 🌟 헤더 영역 */
         header {
             background-color: var(--primary-color);
             color: white;
-            padding: 15px 20px;
+            padding: 15px 16px; /* 전체 상하 패딩을 줄여서 세로폭 축소 */
+            display: flex;
+            flex-direction: column;
         }
-        h1 { margin: 0; font-size: 1.25rem; font-weight: 700; text-align: center; }
-        .sub-header { font-size: 0.75rem; opacity: 0.85; margin-top: 4px; text-align: center; }
         
-        .header-actions {
+        h1 { 
+            margin: 0; 
+            font-size: 1.6rem; /* 제목 조금 더 크게 */
+            font-weight: 700; 
+            text-align: center; 
+        }
+        .sub-header { 
+            font-size: 0.7rem; 
+            opacity: 0.85; 
+            margin-top: 4px; 
+            text-align: center; 
+        }
+        
+        /* 투데이/공유 버튼 묶음 (여기서 마진을 줄여 통째로 위로 끌어올림) */
+        .header-action-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            font-size: 0.8rem;
+            align-items: flex-end;
+            margin-top: 1px; /* 제목/서브타이틀과 가까워지도록 수치 축소 */
+            margin-bottom: 6px; /* 공지사항과도 바짝 붙임 */
         }
-        .stats-badge {
-            background: rgba(0, 0, 0, 0.15);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 500;
+
+        /* 방문자 통계 (세로배치) */
+        .header-stats {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.7rem;
+            line-height: 1.3;
+            opacity: 0.95;
         }
+        .header-stats span {
+            font-weight: 700;
+            color: #fff;
+            margin-left: 5px;
+        }
+
+        /* 공유버튼 */
         .btn-share {
             background: rgba(255, 255, 255, 0.25);
             border: none;
@@ -73,6 +98,7 @@
             padding: 5px 12px;
             border-radius: 20px;
             cursor: pointer;
+            font-size: 0.75rem;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -82,14 +108,31 @@
         .btn-share:hover { background: rgba(255, 255, 255, 0.35); }
         .btn-share svg { width: 14px; height: 14px; fill: currentColor; }
 
-        .disclaimer-text {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.9);
+        /* 🌟 공지사항 롤링 영역 */
+        .notice-container {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 6px;
+            padding: 6px 10px;
             text-align: center;
-            margin-top: 15px;
-            line-height: 1.4;
-            word-break: keep-all;
+            font-size: 0.75rem;
             font-weight: 500;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .notice-container a {
+            color: #fff;
+            text-decoration: none;
+            transition: opacity 0.3s ease-in-out;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .notice-container a[href]:hover {
+            text-decoration: underline;
         }
 
         /* 🌟 검색창 스타일 */
@@ -100,7 +143,7 @@
         }
         .search-input {
             width: 100%;
-            padding: 10px 14px;
+            padding: 8px 14px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 0.9rem;
@@ -137,12 +180,13 @@
             font-weight: 700;
         }
 
+        /* 🌟 지역 필터 세로폭 최적화 */
         .checkbox-group {
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
-            gap: 6px;
-            padding: 10px 15px;
+            gap: 5px; /* 간격 축소 */
+            padding: 8px 12px; /* 위아래 패딩 축소 */
             background: #fafafa;
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -150,11 +194,11 @@
         .checkbox-group::-webkit-scrollbar { display: none; }
         .filter-cb { display: none; }
         .cb-label {
-            padding: 5px 12px;
+            padding: 4px 10px; /* 라벨 패딩 축소 */
             background: #fff;
             border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            border-radius: 16px;
+            font-size: 0.75rem; /* 폰트 사이즈 소폭 축소 */
             color: #555;
             cursor: pointer;
             transition: all 0.2s;
@@ -268,20 +312,24 @@
 
 <div class="app-container">
     <div class="sticky-wrapper">
-        <header id="app-header">
+	<header id="app-header">
             <h1>헤이청주 📢 교육/체험 링크모음</h1>
             <div class="sub-header" id="last-updated-text">최근 업데이트: 계산중...</div>
-            <div class="header-actions">
-                <div class="stats-badge">
-                    오늘 방문 <span id="count-today" style="font-weight:700; color:#fff;">...</span> / 누적 <span id="count-total">...</span>
+            
+            <div class="header-action-row">
+                <div class="header-stats">
+                    <div>TODAY<span id="count-today">...</span></div>
+                    <div>TOTAL<span id="count-total">...</span></div>
                 </div>
+                
                 <button class="btn-share" onclick="sharePage()">
                     <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
                     공유하기
                 </button>
             </div>
-            <div class="disclaimer-text">
-                ※ 정보 전달에 일부 오류 발생 가능하므로 관련 홈페이지 최종 확인 권장
+            
+            <div class="notice-container">
+                <a id="notice-link"></a>
             </div>
         </header>
 
@@ -321,6 +369,55 @@
 </div>
 
 <script>
+    // 🌟 공지사항 데이터 (자유롭게 추가/수정 가능)
+    const noticeData = [
+        { 
+            text: "[헤이청주⚡오픈런 예약 카톡방 입장하기] 👆", 
+            link: "https://open.kakao.com/o/gAUqOrai" 
+        },
+        { 
+            text: "[📞헤이청주에 협업문의/제안/오류신고하기] 👆", 
+            link: "https://forms.gle/h8KLaLkfsU55aH5T9" 
+        },
+        { 
+            text: "※ 정보전달 시 간혹 오타가 발생하므로 해당 홈페이지에서 최종 확인해주세요 ※", 
+            link: "" // 링크가 없을 경우 비워두기
+        }
+    ];
+
+    // 공지사항 롤링 함수
+    function initNotice() {
+        let currentIndex = 0;
+        const noticeLink = document.getElementById('notice-link');
+        
+        function updateNotice() {
+            // 1. 투명하게 만들어서 사라지는 효과
+            noticeLink.style.opacity = '0';
+            
+            // 2. 0.3초 뒤에 텍스트를 바꾸고 다시 나타나게 함
+            setTimeout(() => {
+                const data = noticeData[currentIndex];
+                noticeLink.innerText = data.text;
+                
+                if (data.link) {
+                    noticeLink.href = data.link;
+                    noticeLink.target = "_blank";
+                    noticeLink.style.cursor = "pointer";
+                } else {
+                    noticeLink.removeAttribute('href');
+                    noticeLink.removeAttribute('target');
+                    noticeLink.style.cursor = "default";
+                }
+                
+                noticeLink.style.opacity = '1';
+                currentIndex = (currentIndex + 1) % noticeData.length;
+            }, 300);
+        }
+
+        updateNotice(); // 최초 1회 즉시 실행
+        setInterval(updateNotice, 4000); // 4초마다 공지 교체
+    }
+
     function initLastUpdated() {
         const updateElem = document.getElementById('last-updated-text');
         const lm = new Date(document.lastModified);
@@ -449,7 +546,6 @@
         });
     }
 
-    // 날짜를 파싱하여 숫자로 변환 (빠른 날짜일수록 숫자가 작음)
     function parseDateValue(dateStr) {
         if (!dateStr) return 9999; 
         
@@ -475,21 +571,17 @@
     }
 
     function applyFilters() {
-        // 1. 체크박스 필터 값
         const checkedBoxes = document.querySelectorAll('.filter-cb:checked');
         const selectedLocs = Array.from(checkedBoxes).map(cb => cb.value);
         
-        // 2. 검색창 필터 값
         const keyword = document.getElementById('search-input').value.trim().toLowerCase();
 
         const container = document.getElementById('list-container');
         container.innerHTML = '';
 
         let filteredData = eventData.filter(item => {
-            // 탭 필터
             const matchTab = item.type === currentTab;
             
-            // 지역 필터
             let matchLoc = false;
             if (selectedLocs.length === 0) {
                 matchLoc = true; 
@@ -503,7 +595,6 @@
                 matchLoc = expandedLocs.some(locStr => item.loc && item.loc.includes(locStr));
             }
 
-            // 🌟 키워드 검색 필터 (제목, 장소, 지역 매칭)
             let matchSearch = true;
             if (keyword) {
                 matchSearch = (item.title && item.title.toLowerCase().includes(keyword)) ||
@@ -514,21 +605,11 @@
             return matchTab && matchLoc && matchSearch;
         });
 
-// 🌟 사전예약 중 탭 마감 임박순 정렬 (1순위 오늘마감 -> 2순위 내일마감 -> 3순위 마감일자 빠른 순)
         if (currentTab === 'ongoing') {
             filteredData.sort((a, b) => {
-                // 1순위: 오늘마감 뱃지가 있는 것이 무조건 맨 위로
-                if (a.isTodayClose !== b.isTodayClose) {
-                    return b.isTodayClose ? 1 : -1;
-                }
-
-                // 2순위: 내일마감 뱃지가 있는 것이 그다음 순위로
-                if (a.isTomorrowClose !== b.isTomorrowClose) {
-                    return b.isTomorrowClose ? 1 : -1;
-                }
+                if (a.isTodayClose !== b.isTodayClose) return b.isTodayClose ? 1 : -1;
+                if (a.isTomorrowClose !== b.isTomorrowClose) return b.isTomorrowClose ? 1 : -1;
                 
-                // 3순위: 마감일(applyEnd) 텍스트를 분석하여 날짜가 빠른 순서대로 정렬
-                // (마감일이 없는 상시 접수 등은 숫자가 9999로 처리되어 자동으로 맨 밑으로 내려갑니다)
                 const aEndVal = parseDateValue(a.applyEnd);
                 const bEndVal = parseDateValue(b.applyEnd);
                 
@@ -594,6 +675,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        initNotice(); // 🌟 롤링 공지사항 실행
         initLastUpdated();
         initVisitCounters();
         processEventDates(); 
@@ -603,5 +685,3 @@
 
 </body>
 </html>
-
-
