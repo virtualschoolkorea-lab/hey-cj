@@ -500,7 +500,7 @@
                     if (cleanValue.toLowerCase().startsWith('javascript:')) applyAttr = `href="#" onclick="${safeApplyValue.replace('javascript:', '')}"`;
                     else if (cleanValue.toLowerCase().startsWith('www.')) applyAttr = `href="http://${safeApplyValue}" target="_blank"`;
                     
-                    btnApply = `<a ${applyAttr} class="btn-link" onclick="trackEventClick('${trackTitle}', 'apply')">신청하기 🔗</a>`;
+                    btnApply = `<a ${applyAttr} class="btn-link" onclick="trackEventClick('${trackTitle}', 'apply')">예약하기 🔗</a>`;
                 } else {
                     btnApply = `<button type="button" class="btn-link btn-disabled" onclick="alert('${alertSafeValue}');">${safeApplyValue}</button>`;
                 }
@@ -536,5 +536,6 @@
 </script>
 </body>
 </html>
+
 
 
