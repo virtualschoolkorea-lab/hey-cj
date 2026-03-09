@@ -12,6 +12,16 @@
     <meta property="og:image" content="https://heycj.vercel.app/og-image.png"> 
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HGXPJ0KLHD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-HGXPJ0KLHD');
+    </script>
+
     <style>
         :root {
             --primary-color: #4CAF50;
@@ -177,6 +187,7 @@
         updateElem.innerText = `최근 업데이트: ${y}/${m}/${d} ${h}:${min}`;
     }
 
+    // 헤더에 띄워줄 방문자 수는 화면 표시용으로 기존 counterapi.dev 계속 사용
     async function initVisitCounters() {
         const namespace = 'heycheongju_v1'; 
         const kstNow = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
@@ -188,19 +199,18 @@
         } catch (e) { document.getElementById('count-total').innerText = '-'; document.getElementById('count-today').innerText = '-'; }
     }
 
-    // 💡 [수정 1] 대시보드와 동일한 해시 로직 (16진법) 적용
-    function getHash(str) {
-        if (!str) return 'none'; let hash = 0;
-        for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash = hash & hash; }
-        return Math.abs(hash).toString(16); 
-    }
-
-    // 💡 [수정 2] 대시보드와 동일한 네임스페이스 및 키(Key) 형식 적용
+    // 💡 [수정] 구글 애널리틱스 통계 전송 함수 (기존 counterapi 해시 함수 삭제)
     function trackEventClick(title, btnType) {
-        if (!title) return; const hash = getHash(title);
-        // 대시보드의 namespace는 'heycheongju_clicks_v1', 키 포맷은 '${hash}_${btnType}' 입니다.
-        fetch(`https://api.counterapi.dev/v1/heycheongju_clicks_v1/${hash}_${btnType}/up`)
-            .catch(e => console.error('클릭 통계 기록 실패:', e));
+        if (!title) return;
+        
+        // 버튼 타입에 따라 구글 애널리틱스에 찍힐 한글 이벤트명 지정
+        const actionName = (btnType === 'detail') ? '상세보기_클릭' : '신청하기_클릭';
+
+        // 구글 애널리틱스로 데이터 전송
+        gtag('event', actionName, {
+            'event_category': '버튼클릭',
+            'event_label': title
+        });
     }
 
     function sharePage() {
@@ -467,7 +477,6 @@
                              lowerUrl.includes('phinf.pstatic.net');
             }
 
-            // 💡 [수정 3] 제목에 홑따옴표(')가 포함될 경우 자바스크립트가 터지는 오류 방지
             if (detailUrl && detailUrl.trim() !== '') {
                 const safeUrl = detailUrl.trim().replace(/"/g, '&quot;');
                 const trackTitle = (item.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -490,7 +499,6 @@
                 const cleanValue = rawApplyValue.trim();
                 const safeApplyValue = cleanValue.replace(/"/g, '&quot;');
                 const alertSafeValue = cleanValue.replace(/'/g, "\\'").replace(/"/g, '\\"');
-                // 💡 [수정 3 적용]
                 const trackTitle = (item.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 
                 const isUrl = /^(https?:\/\/|www\.|javascript:)/i.test(cleanValue);
@@ -536,6 +544,3 @@
 </script>
 </body>
 </html>
-
-
-
