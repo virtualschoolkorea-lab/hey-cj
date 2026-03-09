@@ -445,7 +445,7 @@
 
             let dateBadges = '';
             if (item.isTodayOpen) dateBadges += `<span class="badge badge-open">오늘오픈</span> `; 
-            if (item.isTodayClose) dateBadges += `<span class="badge badge-today">오늘마마감</span> `;
+            if (item.isTodayClose) dateBadges += `<span class="badge badge-today">오늘마감</span> `;
             if (item.isTomorrowOpen && !item.isTodayOpen) dateBadges += `<span class="badge badge-open" style="background-color:#ff9800;">내일오픈</span> `;
             if (item.isTomorrowClose && !item.isTodayClose) dateBadges += `<span class="badge badge-close">내일마감</span> `;
 
@@ -536,3 +536,4 @@
 </script>
 </body>
 </html>
+
