@@ -136,11 +136,11 @@
             <input type="text" id="search-input" class="search-input" placeholder="검색어를 입력하세요 (예: 도서관, 과학, 공연)" onkeyup="applyFilters()">
         </div>
 
-        <div class="tabs">
-            <div class="tab active" onclick="changeTab(this, 'ongoing')">사전예약 중</div>
-            <div class="tab" onclick="changeTab(this, 'always')">상시/현장접수</div>
-            <div class="tab" onclick="changeTab(this, 'affiliate')">제휴/이벤트</div>
-        </div>
+    <div class="tabs">
+        <div class="tab" onclick="changeTab(this, 'ongoing')">사전예약 중</div>
+        <div class="tab" onclick="changeTab(this, 'always')">상시/현장접수</div>
+        <div class="tab active" onclick="changeTab(this, 'affiliate')">제휴/이벤트</div>
+    </div>
         
         <div class="filter-wrapper">
             <div class="checkbox-group" id="combined-filter-group" onscroll="handleFilterScroll(this)"></div>
@@ -360,7 +360,7 @@
         return 9999; 
     }
 
-    let currentTab = 'ongoing'; 
+    let currentTab = 'affiliate'; 
 
     function parseRegDate(dateStr) {
         if (!dateStr) return 0;
@@ -566,5 +566,3 @@
 </script>
 </body>
 </html>
-
-
