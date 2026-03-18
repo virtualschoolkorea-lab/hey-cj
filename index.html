@@ -1051,7 +1051,7 @@
         const benefitUrl = item['혜택'];
         if (item.type === 'affiliate' && benefitUrl && benefitUrl.trim() !== '') {
             const safeBenefitUrl = benefitUrl.trim().replace(/"/g, '&quot;');
-            btnBenefit = `<button type="button" class="btn-benefit btn-img-modal" data-url="${safeBenefitUrl}" data-title="혜택받기">🎁 혜택받기 (쿠폰/할인권 등)</button>`;
+            btnBenefit = `<button type="button" class="btn-benefit btn-img-modal" data-url="${safeBenefitUrl}" data-title="혜택받기">🎁 혜택받기 (쿠폰/할인권)</button>`;
         }
 
         document.getElementById('popupFooter').innerHTML = `
