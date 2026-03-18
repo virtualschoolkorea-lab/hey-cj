@@ -182,7 +182,12 @@
         .img-modal-overlay { display: flex; visibility: hidden; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; padding-bottom: 65px; box-sizing: border-box; }
         .img-modal-overlay.active { visibility: visible; opacity: 1; pointer-events: auto; }
         
-        .img-modal-wrapper { position: relative; max-width: 90%; max-height: calc(100% - 100px); display: inline-block; }
+        .img-modal-wrapper { 
+    position: relative; 
+    max-width: min(90%, 600px); /* 모바일은 90% 유지, PC에서는 최대 600px까지만 커지도록 제한 */
+    max-height: calc(100% - 100px); 
+    display: inline-block; 
+}
         .img-modal-scroll-area { max-height: calc(100vh - 100px); overflow-y: auto; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); background: #fff; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
         
         .img-modal-scroll-area::-webkit-scrollbar { width: 6px; }
