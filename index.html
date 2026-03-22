@@ -1146,7 +1146,7 @@ const firebaseConfig = {
                 <div class="review-form">
                     <div class="review-input-group">
                         <input type="text" id="reviewNickname" class="review-nickname" placeholder="(닉네임)" maxlength="8" />
-                        <input type="text" id="reviewContent" class="review-content" placeholder="(후기/꿀팁 등을 남겨주세요)?" onkeypress="if(event.key==='Enter') submitReview('${eventId}')" />
+                        <input type="text" id="reviewContent" class="review-content" placeholder="(후기/꿀팁 등)" onkeypress="if(event.key==='Enter') submitReview('${eventId}')" />
                         <button class="btn-submit-review" onclick="submitReview('${eventId}')">등록</button>
                     </div>
                 </div>
