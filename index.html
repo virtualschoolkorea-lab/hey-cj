@@ -1135,12 +1135,12 @@ const firebaseConfig = {
         const reviewSectionHtml = `
             <div class="review-section">
                 <div class="review-header">
-                    💬 한줄 기대평/후기 (<span class="count" id="reviewCount">0</span>)
+                    💬 한줄 솔직후기 (<span class="count" id="reviewCount">0</span>)
                 </div>
                 <div class="review-form">
                     <div class="review-input-group">
                         <input type="text" id="reviewNickname" class="review-nickname" placeholder="닉네임" maxlength="8" />
-                        <input type="text" id="reviewContent" class="review-content" placeholder="행사 어떠셨나요? 기대평도 좋아요!" onkeypress="if(event.key==='Enter') submitReview('${eventId}')" />
+                        <input type="text" id="reviewContent" class="review-content" placeholder="행사 어떠셨나요?" onkeypress="if(event.key==='Enter') submitReview('${eventId}')" />
                         <button class="btn-submit-review" onclick="submitReview('${eventId}')">등록</button>
                     </div>
                 </div>
