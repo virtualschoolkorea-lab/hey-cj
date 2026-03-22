@@ -1070,6 +1070,18 @@ const firebaseConfig = {
         if (!nickname) return alert('닉네임을 입력해주세요.');
         if (!content) return alert('내용을 입력해주세요.');
 
+        /* ▼ 여기에 비속어 차단 코드 추가 ▼ */
+    const badWords = ['바보', '멍청이', '비속어1', '비속어2']; // 차단할 단어들을 쉼표로 구분해서 적어주세요.
+    
+    // 닉네임이나 내용에 비속어가 포함되어 있는지 검사
+    const hasBadWord = badWords.some(word => nickname.includes(word) || content.includes(word));
+    
+    if (hasBadWord) {
+        alert('부적절한 단어가 포함되어 있어 등록할 수 없습니다.');
+        return; // 여기서 함수를 종료시켜서 서버로 전송하지 않음
+    }
+    /* ▲ 여기까지 ▲ */
+
         // 버튼 상태 변경
         const btn = document.querySelector('.btn-submit-review');
         btn.disabled = true;
