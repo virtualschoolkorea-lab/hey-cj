@@ -1023,7 +1023,7 @@ const firebaseConfig = {
             if(countElem) countElem.innerText = reviews.length;
 
             if (reviews.length === 0) {
-                reviewListContainer.innerHTML = '<div class="empty-review">아직 등록된 후기가 없습니다.<br>첫 번째 후기를 남겨주세요! 😃</div>';
+                reviewListContainer.innerHTML = '<div class="empty-review">아직 등록된 댓글이 없습니다.<br>첫 번째 댓글을 남겨주세요! 😃</div>';
                 return;
             }
 
@@ -1137,7 +1137,7 @@ const firebaseConfig = {
         const reviewSectionHtml = `
             <div class="review-section">
                 <div class="review-header">
-                    💬 다음 방문객들을 위한 꿀팁/소감 (<span class="count" id="reviewCount">0</span>)
+                    💬 댓글달기 (후기/꿀팁 등)  (<span class="count" id="reviewCount">0</span>)
                 </div>
                 <div class="review-form">
                     <div class="review-input-group">
