@@ -1027,7 +1027,7 @@ const firebaseConfig = {
             if(countElem) countElem.innerText = reviews.length;
 
             if (reviews.length === 0) {
-                reviewListContainer.innerHTML = '<div class="empty-review">아직 등록된 댓글이 없습니다.<br>후기/꿀팁 등을 남겨주세요! 😃</div>';
+                reviewListContainer.innerHTML = '<div class="empty-review">아직 등록된 댓글이 없습니다.<br>첫 번째 댓글을 남겨주세요! 😃</div>';
                 return;
             }
 
@@ -1145,8 +1145,8 @@ const firebaseConfig = {
                 </div>
                 <div class="review-form">
                     <div class="review-input-group">
-                        <input type="text" id="reviewNickname" class="review-nickname" placeholder="닉네임" maxlength="8" />
-                        <input type="text" id="reviewContent" class="review-content" placeholder="행사 어떠셨나요?" onkeypress="if(event.key==='Enter') submitReview('${eventId}')" />
+                        <input type="text" id="reviewNickname" class="review-nickname" placeholder="(닉네임)" maxlength="8" />
+                        <input type="text" id="reviewContent" class="review-content" placeholder="(후기/꿀팁 등을 남겨주세요)?" onkeypress="if(event.key==='Enter') submitReview('${eventId}')" />
                         <button class="btn-submit-review" onclick="submitReview('${eventId}')">등록</button>
                     </div>
                 </div>
