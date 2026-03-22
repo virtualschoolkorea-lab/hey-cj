@@ -62,7 +62,7 @@
         .notice-container { background: rgba(0, 0, 0, 0.15); border-radius: 6px; padding: 4px 8px; text-align: center; font-size: 0.7rem; font-weight: 500; height: 18px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-top: 5px; }
         .notice-container a { color: #fff; text-decoration: none; transition: opacity 0.3s ease-in-out; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1; }
 
-        /* 하단 배너 광고영역 (기존 세로폭 유지) */
+        /* 하단 배너 광고영역 */
         .promo-area-wrap {
             position: fixed;
             bottom: 0;
@@ -70,7 +70,7 @@
             transform: translateX(-50%);
             width: 100%;
             max-width: 500px;
-            height: 54px; /* 모바일 기존 높이 */
+            height: 54px;
             background-color: #fff;
             padding: 5px 10px; 
             box-sizing: border-box;
@@ -120,7 +120,7 @@
 
             .promo-area-wrap { 
                 max-width: 800px; 
-                height: 78px; /* PC 기존 높이 */
+                height: 78px; 
                 padding: 8px 20px; 
                 bottom: 0; 
                 border-radius: 16px 16px 0 0; 
@@ -232,25 +232,56 @@
         .btn-benefit { display: flex; align-items: center; justify-content: center; background-color: #E53935; color: white; border: none; padding: 10px 0; border-radius: 6px; font-size: 1rem; font-weight: 700; width: 100%; cursor: pointer; transition: all 0.2s; box-sizing: border-box; font-family: inherit; }
         .btn-benefit:hover { background-color: #C62828; }
 
-        /* 심플하고 컴팩트해진 리뷰 영역 디자인 (한 줄 세팅 & 시각적 구분 완료) */
-        .review-section { margin-top: 15px; border-top: 1px dashed #ddd; padding-top: 10px; }
-        .review-header { font-size: 0.85rem; font-weight: 700; color: #555; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
-        .review-header span.count { color: var(--primary-color); }
+        /* 리뷰 섹션 CSS */
+        .review-section { margin-top: 15px; padding-top: 10px; }
+        
+        /* 댓글창 드롭다운 토글 버튼 */
+        .review-toggle-btn {
+            width: 100%;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #555;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .review-toggle-btn:hover { background: #f1f1f1; }
+        .review-toggle-btn .count { color: var(--primary-color); }
+        .toggle-arrow { font-size: 0.8rem; transition: transform 0.3s; color: #888; }
+        .review-toggle-btn.open .toggle-arrow { transform: rotate(180deg); } 
+
+        /* 숨겨질 댓글 본문 영역 */
+        .review-collapsible {
+            display: none; 
+            padding-top: 12px;
+        }
+        .review-collapsible.open {
+            display: block; 
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(-5px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
         .review-form { margin-bottom: 10px; }
         .review-input-group { display: flex; gap: 4px; }
         .review-nickname { width: 60px; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; }
         .review-content { flex: 1; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; min-width: 0; }
         .review-nickname:focus, .review-content:focus { border-color: var(--primary-color); }
-        .review-nickname:focus, .review-content:focus { border-color: var(--primary-color); }
+        
+        /* 플레이스홀더 색상 연하게 변경 */
+        .review-nickname::placeholder, .review-content::placeholder {
+            color: #cccccc;
+            opacity: 1;
+        }
 
-/* ▼ 여기에 추가 ▼ */
-.review-nickname::placeholder, .review-content::placeholder {
-    color: #cccccc;
-    opacity: 1;
-}
-/* ▲ 여기까지 ▲ */
-
-.btn-submit-review { background: var(--primary-color); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .btn-submit-review { background: var(--primary-color); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .btn-submit-review:hover { background: #388E3C; }
 
@@ -258,13 +289,9 @@
         .review-list::-webkit-scrollbar { width: 4px; }
         .review-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
         
-        /* [핵심] 한 줄 댓글창의 시각적 구분 디자인 */
         .review-card { display: flex; align-items: baseline; gap: 6px; background: none; padding: 0; }
-        /* 1. 닉네임: 배경 음영 제거, 깔끔한 텍스트로 변경 */
         .review-card-author { font-weight: 700; color: #444; font-size: 0.75rem; white-space: nowrap; flex-shrink: 0; }
-/* 2. 내용: 배경과 테두리를 모두 지워서 입력창처럼 안 보이게 수정 */
-.review-card-text { font-size: 0.8rem; color: #333; line-height: 1.3; word-break: break-all; flex-grow: 1; margin: 0; padding: 0 4px; }
-        /* 3. 날짜: 심플한 회색 텍스트 */
+        .review-card-text { font-size: 0.8rem; color: #333; line-height: 1.3; word-break: break-all; flex-grow: 1; margin: 0; padding: 0 4px; }
         .review-card-date { font-size: 0.65rem; color: #aaa; white-space: nowrap; flex-shrink: 0; }
         .empty-review { text-align: center; color: #999; font-size: 0.8rem; padding: 10px 0; background: #fafafa; border-radius: 6px; }
     </style>
@@ -284,15 +311,15 @@
                 </div>
 
                 <div class="header-buttons-row">
-    <button class="btn-share" onclick="window.open('https://forms.gle/E2vPFK6P7p3R95vH8', '_blank')">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        문의
-    </button>
-    <button class="btn-share" onclick="sharePage()">
-        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-        공유
-    </button>
-</div>
+                    <button class="btn-share" onclick="window.open('https://forms.gle/E2vPFK6P7p3R95vH8', '_blank')">
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        문의
+                    </button>
+                    <button class="btn-share" onclick="sharePage()">
+                        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                        공유
+                    </button>
+                </div>
             </div>
 
             <div class="notice-container"><a id="notice-link"></a></div>
@@ -363,16 +390,15 @@
 </div>
 
 <script>
-    // [보안 업데이트 1] 파이어베이스 로딩 에러 방어코드
-const firebaseConfig = {
-  apiKey: "AIzaSyBZg-wKztuG-Ak7-WqWSAYe9UIj874fYAY",
-  authDomain: "heycj-55b6a.firebaseapp.com",
-  databaseURL: "https://heycj-55b6a-default-rtdb.firebaseio.com",
-  projectId: "heycj-55b6a",
-  storageBucket: "heycj-55b6a.firebasestorage.app",
-  messagingSenderId: "147201792706",
-  appId: "1:147201792706:web:3b3130a47cd0f50ce5b95b"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZg-wKztuG-Ak7-WqWSAYe9UIj874fYAY",
+      authDomain: "heycj-55b6a.firebaseapp.com",
+      databaseURL: "https://heycj-55b6a-default-rtdb.firebaseio.com",
+      projectId: "heycj-55b6a",
+      storageBucket: "heycj-55b6a.firebasestorage.app",
+      messagingSenderId: "147201792706",
+      appId: "1:147201792706:web:3b3130a47cd0f50ce5b95b"
+    };
 
     let db = null;
     try {
@@ -384,12 +410,10 @@ const firebaseConfig = {
         console.warn("방화벽/광고차단기로 인해 파이어베이스 로딩이 제한되었습니다. 조회수 없이 행사를 정상 로딩합니다.", error);
     }
 
-    // 보안: 비회원 입력창에 HTML/스크립트 태그 입력 방지 (리뷰용)
     function escapeHtml(text) {
         return (text || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
-    // 텍스트 속 모든 줄바꿈 기호를 <br> 태그로 예쁘게 바꿔주는 함수 (팝업창 용)
     function nl2br(str) {
         if (!str) return '';
         return str.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>');
@@ -1020,7 +1044,20 @@ const firebaseConfig = {
         }
     });
 
-    // 💡 파이어베이스를 통해 실시간으로 리뷰를 불러옵니다.
+    // 💡 리뷰 창 드롭다운 토글 기능 추가
+    function toggleReviewSection() {
+        const collapsible = document.getElementById('reviewCollapsible');
+        const toggleBtn = document.getElementById('reviewToggleBtn');
+        
+        if (collapsible.classList.contains('open')) {
+            collapsible.classList.remove('open');
+            toggleBtn.classList.remove('open');
+        } else {
+            collapsible.classList.add('open');
+            toggleBtn.classList.add('open');
+        }
+    }
+
     function loadReviews(eventId) {
         const reviewListContainer = document.getElementById('reviewListContainer');
         if (!reviewListContainer || !db) return;
@@ -1046,7 +1083,6 @@ const firebaseConfig = {
                 const dateObj = new Date(review.timestamp);
                 const dateStr = `${dateObj.getFullYear()}.${String(dateObj.getMonth()+1).padStart(2,'0')}.${String(dateObj.getDate()).padStart(2,'0')}`;
                 
-                // [수정된 부분] 한 줄Comment 구조로 변경 (닉네임 - 내용 - 날짜)
                 html += `
                     <div class="review-card">
                         <span class="review-card-author">👤 ${escapeHtml(review.nickname)}</span>
@@ -1059,7 +1095,6 @@ const firebaseConfig = {
         });
     }
 
-    // 💡 리뷰 작성: 보안을 위해 파이어베이스에 직접 안 쓰고, 앱스크립트 웹 앱을 우회해서 보냅니다.
     function submitReview(eventId) {
         const nicknameInput = document.getElementById('reviewNickname');
         const contentInput = document.getElementById('reviewContent');
@@ -1070,49 +1105,30 @@ const firebaseConfig = {
         if (!nickname) return alert('닉네임을 입력해주세요.');
         if (!content) return alert('내용을 입력해주세요.');
 
-        /* ▼ 여기에 비속어 차단 코드 추가 ▼ */
-/* ▼ 무관용 원칙! 확장된 비속어/악플 차단 리스트 ▼ */
-    const badWords = [
-        // 기본 욕설 및 변형
-        '씨발', '시발', '쒸발', '슈발', '쓔발', '띠발', '찌발', '씨방새', '씨부랄', '씨불', '씨팔', '십알', '씹알', '썅', '썅년', '썅놈',
+        /* ▼ 무관용 원칙! 확장된 비속어/악플 차단 리스트 ▼ */
+        const badWords = [
+            '씨발', '시발', '쒸발', '슈발', '쓔발', '띠발', '찌발', '씨방새', '씨부랄', '씨불', '씨팔', '십알', '씹알', '썅', '썅년', '썅놈',
+            '개새끼', '개새', '개년', '개놈', '개자식', '개소리', '개가튼', '개돼지', '개찌질',
+            '좆', '좃', '존나', '좃나', '좆나', '졸라', '죨라', '씹', '씹새', '씹새끼', '씹창', '씹덕', '좆밥', '좃밥',
+            '병신', '빙신', '븅신', '지랄', '염병', '똘추',
+            '애미', '애비', '느금마', '니미', '호로새끼', '창녀', '걸레', '맘충', '틀딱', '급식충', '김치녀', '된장녀', '한남', '메갈', '일베', '워마드', '페미년', '한녀',
+            '닥쳐', '아가리', '주둥이', '대가리', '모가지', '뒤져', '뒈져', '자살', '뒈져라', '죽어라',
+            '또라이', '미친', '미친놈', '미친년', '쓰레기', '찌질이', '관종', '호구', '빠가',
+            'ㅅㅂ', 'ㅆㅂ', 'ㅂㅅ', 'ㅄ', 'ㅈㄹ', 'ㅈㄴ', 'ㅁㅊ', 'ㄲㅈ', 'ㄷㅊ', 'ㅇㅁ', 'ㄴㄱㅁ'
+        ];
         
-        // '개' 관련
-        '개새끼', '개새', '개년', '개놈', '개자식', '개소리', '개가튼', '개돼지', '개찌질',
+        // 닉네임이나 내용에 비속어가 포함되어 있는지 검사
+        const hasBadWord = badWords.some(word => nickname.includes(word) || content.includes(word));
         
-        // '좆/씹' 관련
-        '좆', '좃', '존나', '좃나', '좆나', '졸라', '죨라', '씹', '씹새', '씹새끼', '씹창', '씹덕', '좆밥', '좃밥',
-        
-        // '병신/지랄' 관련
-        '병신', '빙신', '븅신', '지랄', '염병', '똘추',
-        
-        // 비하/혐오/패드립 (매우 강력한 차단 대상)
-        '애미', '애비', '느금마', '니미', '호로새끼', '창녀', '걸레', '맘충', '틀딱', '급식충', '김치녀', '된장녀', '한남', '메갈', '일베', '워마드', '페미년', '한녀',
-        
-        // 폭력/위협적 단어
-        '닥쳐', '아가리', '주둥이', '대가리', '모가지', '뒤져', '뒈져', '자살', '뒈져라', '죽어라',
-        
-        // 기타 모욕성 단어
-        '또라이', '미친', '미친놈', '미친년', '쓰레기', '찌질이', '관종', '호구', '빠가',
-        
-        // 초성 (필터 회피용 꼼수 차단)
-        'ㅅㅂ', 'ㅆㅂ', 'ㅂㅅ', 'ㅄ', 'ㅈㄹ', 'ㅈㄴ', 'ㅁㅊ', 'ㄲㅈ', 'ㄷㅊ', 'ㅇㅁ', 'ㄴㄱㅁ'
-    ];
-    /* ▲ 여기까지 ▲ */    
-    // 닉네임이나 내용에 비속어가 포함되어 있는지 검사
-    const hasBadWord = badWords.some(word => nickname.includes(word) || content.includes(word));
-    
-    if (hasBadWord) {
-        alert('부적절한 단어가 포함되어 있어 등록할 수 없습니다.');
-        return; // 여기서 함수를 종료시켜서 서버로 전송하지 않음
-    }
-    /* ▲ 여기까지 ▲ */
+        if (hasBadWord) {
+            alert('부적절한 단어가 포함되어 있어 등록할 수 없습니다.');
+            return; // 여기서 함수를 종료시켜서 서버로 전송하지 않음
+        }
 
-        // 버튼 상태 변경
         const btn = document.querySelector('.btn-submit-review');
         btn.disabled = true;
         btn.innerText = '등록 중...';
 
-        // ⚠️ 주의: 반드시 이전에 알려드린 2단계에서 만든 '구글 앱스크립트 웹앱 주소'로 교체하세요!
         const scriptUrl = "https://script.google.com/macros/s/AKfycbw-a4MQEcaCa1KMSU0IoN_8yZGZk5WfUadbP9SL9DlW0ZJInExl8SVaTbd-wgQBffV7Ow/exec"; 
 
         const formData = new URLSearchParams();
@@ -1126,7 +1142,6 @@ const firebaseConfig = {
         })
         .then(response => response.text())
         .then(result => {
-            // 앱스크립트 처리가 끝나면 파이어베이스 감지기(loadReviews)가 자동으로 화면을 갱신합니다.
             contentInput.value = ''; 
         })
         .catch(error => {
@@ -1184,21 +1199,25 @@ const firebaseConfig = {
         const popupDate = nl2br(item.date || '해당정보 없음');
         const tipText = nl2br((item['꿀팁'] || '').trim());
 
-        // 💡 팝업창 내 리뷰 UI 구성 요소
+        // 💡 팝업창 내 리뷰 UI 구성 요소 (드롭다운 토글 버튼 적용)
         const reviewSectionHtml = `
-            <div class="review-section">
-                <div class="review-header">
-                    💬 댓글  (<span class="count" id="reviewCount">0</span>)
-                </div>
-                <div class="review-form">
-                    <div class="review-input-group">
-                        <input type="text" id="reviewNickname" class="review-nickname" placeholder="(닉네임)" maxlength="8" />
-                        <input type="text" id="reviewContent" class="review-content" placeholder="(후기/꿀팁 등)" onkeypress="if(event.key==='Enter') submitReview('${eventId}')" />
-                        <button class="btn-submit-review" onclick="submitReview('${eventId}')">등록</button>
+            <div class="review-section" style="border-top:none; padding-top:0; margin-top:0;">
+                <button class="review-toggle-btn" id="reviewToggleBtn" onclick="toggleReviewSection()">
+                    <span>💬 댓글 열기 (<span class="count" id="reviewCount">0</span>)</span>
+                    <span class="toggle-arrow">▼</span>
+                </button>
+                
+                <div class="review-collapsible" id="reviewCollapsible">
+                    <div class="review-form">
+                        <div class="review-input-group">
+                            <input type="text" id="reviewNickname" class="review-nickname" placeholder="(닉네임)" maxlength="8" />
+                            <input type="text" id="reviewContent" class="review-content" placeholder="(후기/꿀팁 등)" onkeypress="if(event.key==='Enter') submitReview('${eventId}')" />
+                            <button class="btn-submit-review" onclick="submitReview('${eventId}')">등록</button>
+                        </div>
                     </div>
-                </div>
-                <div class="review-list" id="reviewListContainer">
-                    <div class="empty-review">리뷰를 불러오는 중...</div>
+                    <div class="review-list" id="reviewListContainer">
+                        <div class="empty-review">리뷰를 불러오는 중...</div>
+                    </div>
                 </div>
             </div>
         `;
