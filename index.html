@@ -252,8 +252,8 @@
         .review-card { display: flex; align-items: baseline; gap: 6px; background: none; padding: 0; }
         /* 1. 닉네임: 배경 음영 제거, 깔끔한 텍스트로 변경 */
         .review-card-author { font-weight: 700; color: #444; font-size: 0.75rem; white-space: nowrap; flex-shrink: 0; }
-        /* 2. 내용: 하얀색 캡슐 박스 스타일 */
-        .review-card-text { font-size: 0.8rem; color: #333; line-height: 1.3; word-break: break-all; flex-grow: 1; margin: 0; background-color: #fff; border: 1px solid #eee; padding: 4px 8px; border-radius: 6px; }
+/* 2. 내용: 배경과 테두리를 모두 지워서 입력창처럼 안 보이게 수정 */
+.review-card-text { font-size: 0.8rem; color: #333; line-height: 1.3; word-break: break-all; flex-grow: 1; margin: 0; padding: 0 4px; }
         /* 3. 날짜: 심플한 회색 텍스트 */
         .review-card-date { font-size: 0.65rem; color: #aaa; white-space: nowrap; flex-shrink: 0; }
         .empty-review { text-align: center; color: #999; font-size: 0.8rem; padding: 10px 0; background: #fafafa; border-radius: 6px; }
@@ -308,7 +308,9 @@
 <div class="promo-area-wrap" id="main-promo-wrap">
     <div style="position: relative; width: 100%; height: 100%;">
         
-        <a href="https://blog.naver.com/hyejuousflower" target="_blank" id="fallback-banner" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; display: flex; justify-content: center; align-items: center; text-decoration: none;">
+        <a href="https://blog.naver.com/hyejuousflower" target="_blank" id="fallback-banner" 
+   onclick="gtag('event', '배너_클릭', { 'event_category': '하단광고', 'event_label': '정서뮤직아트배너' });" 
+   style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; justify-content: center; align-items: center; text-decoration: none;">
 </a>
 
         <div id="adsense-banner" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
@@ -1258,7 +1260,7 @@ const firebaseConfig = {
         // 하단 배너 (기존 프레임 크기 유지, object-fit: cover로 이미지 꽉 채우기)
         const fallbackBanner = document.getElementById('fallback-banner');
         if (fallbackBanner) {
-            fallbackBanner.innerHTML = '<img src="https://firebasestorage.googleapis.com/v0/b/heycj-55b6a.firebasestorage.app/o/%ED%97%A4%EC%A3%BC%EC%96%B4%EC%8A%A4%20%EB%B0%B0%EB%84%88.png?alt=media&token=e178c97b-61b1-40b1-9b69-4818abf1c121" alt="상단 배너" style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" />';
+            fallbackBanner.innerHTML = '<img src="https://firebasestorage.googleapis.com/v0/b/heycj-55b6a.firebasestorage.app/o/%EB%B0%B0%EB%84%882.png?alt=media&token=92cd4924-6138-4994-a063-d62471dae14b" alt="상단 배너" style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" />';
         }
     });
 </script>
