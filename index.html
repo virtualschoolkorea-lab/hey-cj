@@ -241,6 +241,16 @@
         .review-nickname { width: 60px; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; }
         .review-content { flex: 1; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; min-width: 0; }
         .review-nickname:focus, .review-content:focus { border-color: var(--primary-color); }
+        .review-nickname:focus, .review-content:focus { border-color: var(--primary-color); }
+
+/* ▼ 여기에 추가 ▼ */
+.review-nickname::placeholder, .review-content::placeholder {
+    color: #cccccc;
+    opacity: 1;
+}
+/* ▲ 여기까지 ▲ */
+
+.btn-submit-review { background: var(--primary-color); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .btn-submit-review { background: var(--primary-color); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .btn-submit-review:hover { background: #388E3C; }
 
