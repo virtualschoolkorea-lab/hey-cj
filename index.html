@@ -791,27 +791,52 @@
         setTimeout(() => handleFilterScroll(filterGroup), 100);
     }
 
-    function parseDateValue(dateStr) {
-        if (!dateStr) return 9999;
-        let match = dateStr.match(/(\d{1,2})\/(\d{1,2})/);
-        if (match) return parseInt(match[1]) * 100 + parseInt(match[2]);
-        match = dateStr.match(/(\d{1,2})월\s*(\d{1,2})일/);
-        if (match) return parseInt(match[1]) * 100 + parseInt(match[2]);
-        match = dateStr.match(/(\d{1,2})월/);
-        if (match) return parseInt(match[1]) * 100;
-        return 9999;
+// 날짜를 YYYYMMDD 형태의 숫자로 변환하는 함수로 업그레이드
+function parseDateValue(dateStr) {
+    if (!dateStr) return 99999999; 
+    let s = String(dateStr).trim();
+
+    // 1. YYYY-MM-DD, YYYY.MM.DD, YYYY/MM/DD 형식 (예: 2026.03.23)
+    let match = s.match(/(\d{4})[-./]\s*(\d{1,2})[-./]\s*(\d{1,2})/);
+    if (match) return parseInt(match[1]) * 10000 + parseInt(match[2]) * 100 + parseInt(match[3]);
+
+    // 2. YY.MM.DD 형식 (예: 26.03.23)
+    match = s.match(/(\d{2})[-./]\s*(\d{1,2})[-./]\s*(\d{1,2})/);
+    if (match) {
+        let year = parseInt(match[1]) + 2000;
+        return year * 10000 + parseInt(match[2]) * 100 + parseInt(match[3]);
     }
 
-    function isDatePassed(dateStr) {
-        if (!dateStr) return false;
-        const val = parseDateValue(dateStr);
-        if (val === 9999) return false;
-        
-        const today = new Date();
-        const todayVal = (today.getMonth() + 1) * 100 + today.getDate();
-        
-        return val < todayVal;
-    }
+    const today = new Date();
+    const currentYear = today.getFullYear();
+
+    // 3. MM/DD 형식 (예: 03/23) - 연도가 없으면 올해로 간주
+    match = s.match(/(\d{1,2})\/(\d{1,2})/);
+    if (match) return currentYear * 10000 + parseInt(match[1]) * 100 + parseInt(match[2]);
+
+    // 4. MM월 DD일 형식 (예: 3월 23일)
+    match = s.match(/(\d{1,2})월\s*(\d{1,2})일/);
+    if (match) return currentYear * 10000 + parseInt(match[1]) * 100 + parseInt(match[2]);
+
+    // 5. MM월 형식 (예: 3월) -> 해당 월의 말일 경으로 처리
+    match = s.match(/(\d{1,2})월/);
+    if (match) return currentYear * 10000 + parseInt(match[1]) * 100 + 31; 
+
+    return 99999999;
+}
+
+// 오늘 날짜와 YYYYMMDD 기준으로 비교하도록 수정
+function isDatePassed(dateStr) {
+    if (!dateStr) return false;
+    const val = parseDateValue(dateStr);
+    if (val === 99999999) return false;
+    
+    const today = new Date();
+    // 오늘 날짜도 YYYYMMDD 숫자로 변환
+    const todayVal = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    
+    return val < todayVal;
+}
 
     function parseRegDate(dateStr) {
         if (!dateStr) return 0;
