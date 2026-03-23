@@ -791,49 +791,43 @@
         setTimeout(() => handleFilterScroll(filterGroup), 100);
     }
 
-// 날짜를 YYYYMMDD 형태의 숫자로 변환하는 함수로 업그레이드
+// 날짜 추출 함수 (한국시간 기준 연도 자동 삽입)
 function parseDateValue(dateStr) {
     if (!dateStr) return 99999999; 
     let s = String(dateStr).trim();
 
-    // 1. YYYY-MM-DD, YYYY.MM.DD, YYYY/MM/DD 형식 (예: 2026.03.23)
     let match = s.match(/(\d{4})[-./]\s*(\d{1,2})[-./]\s*(\d{1,2})/);
     if (match) return parseInt(match[1]) * 10000 + parseInt(match[2]) * 100 + parseInt(match[3]);
 
-    // 2. YY.MM.DD 형식 (예: 26.03.23)
     match = s.match(/(\d{2})[-./]\s*(\d{1,2})[-./]\s*(\d{1,2})/);
     if (match) {
         let year = parseInt(match[1]) + 2000;
         return year * 10000 + parseInt(match[2]) * 100 + parseInt(match[3]);
     }
 
-    const today = new Date();
-    const currentYear = today.getFullYear();
+    // 한국 시간 기준으로 현재 연도 가져오기
+    const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    const currentYear = kstNow.getFullYear();
 
-    // 3. MM/DD 형식 (예: 03/23) - 연도가 없으면 올해로 간주
+    // 3/22 형태 완벽 인식
     match = s.match(/(\d{1,2})\/(\d{1,2})/);
     if (match) return currentYear * 10000 + parseInt(match[1]) * 100 + parseInt(match[2]);
 
-    // 4. MM월 DD일 형식 (예: 3월 23일)
     match = s.match(/(\d{1,2})월\s*(\d{1,2})일/);
     if (match) return currentYear * 10000 + parseInt(match[1]) * 100 + parseInt(match[2]);
-
-    // 5. MM월 형식 (예: 3월) -> 해당 월의 말일 경으로 처리
-    match = s.match(/(\d{1,2})월/);
-    if (match) return currentYear * 10000 + parseInt(match[1]) * 100 + 31; 
 
     return 99999999;
 }
 
-// 오늘 날짜와 YYYYMMDD 기준으로 비교하도록 수정
+// 오늘 날짜 비교 함수 (한국시간 기준)
 function isDatePassed(dateStr) {
     if (!dateStr) return false;
     const val = parseDateValue(dateStr);
     if (val === 99999999) return false;
     
-    const today = new Date();
-    // 오늘 날짜도 YYYYMMDD 숫자로 변환
-    const todayVal = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    // 한국 시간 기준으로 오늘 날짜(YYYYMMDD) 계산
+    const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    const todayVal = kstNow.getFullYear() * 10000 + (kstNow.getMonth() + 1) * 100 + kstNow.getDate();
     
     return val < todayVal;
 }
@@ -1009,9 +1003,12 @@ function isDatePassed(dateStr) {
             let overlayHTML = '';
             
             let statusVal = item['커밍순'] ? item['커밍순'].replace(/\s+/g, '') : '';
-            if (isDatePassed(item['행사마감일'] || item.eventEnd)) {
-                statusVal = '마감';
-            }
+// 파이어베이스에서 사용할 법한 '마감일' 관련 열(Column) 이름을 모두 추가해서 찾게 만듭니다.
+const targetDateStr = item['행사마감일'] || item.eventEnd || item.applyEnd || item['접수마감일'] || item['신청마감일'];
+
+if (isDatePassed(targetDateStr)) {
+    statusVal = '마감';
+}
 
             if (statusVal === '커밍순') {
                 cardClass += ' disabled-card';
